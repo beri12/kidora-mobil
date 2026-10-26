@@ -166,7 +166,10 @@ export function createApiClient(config: ApiClientConfig) {
         if (!current?.refreshToken) return null;
         try {
           const res = await raw('POST', '/auth/refresh', { body: { refreshToken: current.refreshToken } }, null);
-          if (!res.ok) return null;
+          // Only a refused token (401 Invalid/revoked, 403 disabled account)
+          // ends the session. A 5xx or the throttler's 429 is the server
+          // having a bad moment: keep the tokens, like being offline.
+          if (!res.ok) return res.status === 401 || res.status === 403 ? null : current;
           const body = (await parse(res)) as Partial<Tokens> | undefined;
           if (!body?.accessToken) return null;
           const next = { accessToken: body.accessToken, refreshToken: body.refreshToken ?? current.refreshToken };

@@ -22,8 +22,10 @@ export interface ParentDashboard {
   kpis: { overallProgress: Kpi; lessonsCompleted: Kpi; quizAverage: Kpi; streak: Kpi; coins: Kpi } | null;
   subjectProgress: { subject: string; accent: string | null; percent: number }[];
   weeklyActivity: { labels: string[]; minutes: number[]; totalMinutes: number; lessons: number; quizzes: number; assignments: number };
-  insights: { strengths: string[]; needsPractice: string[]; tip: string | null };
-  upcomingAssignments: { id: string; title: string; subject: string; dueAt: string | null; status: string; score: number | null }[];
+  /** `tip` is absent when no child is linked yet. */
+  insights: { strengths: string[]; needsPractice: string[]; tip?: string | null };
+  /** `subject` is null for an assignment whose course has no subject (or a class-only assignment). */
+  upcomingAssignments: { id: string; title: string; subject: string | null; dueAt: string | null; status: string; score: number | null }[];
 }
 
 export interface ActivityItem {

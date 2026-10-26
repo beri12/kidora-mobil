@@ -4,7 +4,7 @@ import { Link, router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { authApi } from '@/api/auth';
 import { ApiError } from '@/api/client';
-import { Button, Field, FormError, PopIn, Screen, Subtitle, Title } from '@/components/ui';
+import { Button, Field, FormError, Mascot, Screen, Subtitle, Title } from '@/components/ui';
 import { pendingFromError, usePending } from '@/features/auth/pending';
 import { signInSchema, type SignInValues } from '@/features/auth/schemas';
 import { SocialButtons } from '@/features/auth/SocialButtons';
@@ -47,9 +47,7 @@ export default function SignIn() {
 
   return (
     <Screen>
-      <PopIn>
-        <Text style={{ fontSize: 56, textAlign: 'center', marginTop: space.xl }}>🦉</Text>
-      </PopIn>
+      <Mascot />
       <Title>Welcome back to Kidora</Title>
       <Subtitle>Log in to keep learning.</Subtitle>
       <View style={{ marginTop: space.xl }}>

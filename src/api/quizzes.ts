@@ -47,7 +47,7 @@ export interface QuizResult {
 export const quizApi = {
   get: (quizId: string) => api.get<Quiz>(`/lms/quizzes/${encodeURIComponent(quizId)}`),
   /** Returns the in-progress attempt if there is one, so calling twice is safe. */
-  start: (quizId: string) => api.post<{ id: string; status: string; attemptNo: number }>(`/lms/quizzes/${encodeURIComponent(quizId)}/attempts`),
+  start: (quizId: string) => api.post<{ id: string; status: string; attemptNo: number; startedAt?: string | null }>(`/lms/quizzes/${encodeURIComponent(quizId)}/attempts`),
   /** Never retried automatically: a second submit of the same attempt is a 400. */
   submit: (attemptId: string, answers: QuizAnswer[]) =>
     api.post<QuizResult>(`/lms/attempts/${encodeURIComponent(attemptId)}/submit`, { answers }),

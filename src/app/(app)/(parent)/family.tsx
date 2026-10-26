@@ -128,8 +128,7 @@ export default function Family() {
                   <Card key={a.id}>
                     <Text style={[font.body, { fontWeight: '800' }]}>{a.title}</Text>
                     <Text style={font.small}>
-                      {a.subject}
-                      {a.dueAt ? ` · due ${new Date(a.dueAt).toLocaleDateString()}` : ''} · {a.status.toLowerCase()}
+                      {[a.subject, a.dueAt ? `due ${new Date(a.dueAt).toLocaleDateString()}` : null, a.status.toLowerCase()].filter(Boolean).join(' · ')}
                     </Text>
                   </Card>
                 ))}

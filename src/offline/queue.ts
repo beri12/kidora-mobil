@@ -2,7 +2,8 @@
  * Offline write queue.
  *
  * Only operations that are safe to replay are queued: marking a lesson
- * content item complete, saving lesson progress. Each carries a stable
+ * content item complete, saving lesson progress, finishing a lesson (the
+ * server grants its XP once, however often it is replayed). Each carries a stable
  * idempotency key created when the learner did the thing, so a replay after
  * a lost response is recognisable. Game attempts, quiz submissions, rewards
  * and payments are never queued: the server scores them, and a delayed

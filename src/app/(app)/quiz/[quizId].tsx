@@ -9,6 +9,7 @@ import { Confetti } from '@/components/Confetti';
 import { isAnswered, QuestionView, type AnswerValue } from '@/features/quiz/QuestionView';
 import { colors, font, space } from '@/theme';
 import { feedback } from '@/utils/feedback';
+import { nowMs } from '@/utils/time';
 
 export default function QuizScreen() {
   const { quizId } = useLocalSearchParams<{ quizId: string; courseId?: string }>();
@@ -39,7 +40,13 @@ export default function QuizScreen() {
     try {
       const a = await quizApi.start(quizId); // returns the open attempt if there is one
       setAttemptId(a.id);
-      if (quiz.data?.timeLimitSec) setLeft(quiz.data.timeLimitSec);
+      const limit = quiz.data?.timeLimitSec;
+      if (limit) {
+        // A resumed attempt keeps the server's clock: it started at startedAt.
+        const startedMs = a.startedAt ? Date.parse(a.startedAt) : NaN;
+        const elapsed = Number.isFinite(startedMs) ? Math.max(0, Math.floor((nowMs() - startedMs) / 1000)) : 0;
+        setLeft(Math.max(0, limit - elapsed));
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not start the quiz.');
     } finally {

@@ -70,6 +70,13 @@ describe('api client', () => {
     expect(expired).toHaveBeenCalledTimes(1);
   });
 
+  it('keeps the session when the refresh call itself fails with a 5xx or 429', async () => {
+    const { client, store, expired } = setup((url) => (url.endsWith('/auth/refresh') ? json(503, {}) : json(401, {})));
+    await expect(client.get('/auth/me', { retries: 0 })).rejects.toMatchObject({ status: 401 });
+    expect(store.value).toEqual({ accessToken: 'old', refreshToken: 'r1' });
+    expect(expired).not.toHaveBeenCalled();
+  });
+
   it('does not attach a token or refresh on public calls', async () => {
     const { client, calls } = setup(() => json(401, { message: 'Invalid credentials' }));
     await expect(client.post('/auth/login', { email: 'a@b.c', password: 'x' }, { auth: false })).rejects.toMatchObject({

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><g transform="translate(512 512) scale(0.95) translate(-512 -540)">
+  <g>
+    <!-- ear tufts -->
+    <path d="M300 330 L268 190 L410 285 Z" fill="#4B2ED6" stroke-linejoin="round" stroke="#4B2ED6" stroke-width="28"/>
+    <path d="M724 330 L756 190 L614 285 Z" fill="#4B2ED6" stroke-linejoin="round" stroke="#4B2ED6" stroke-width="28"/>
+    <!-- body -->
+    <ellipse cx="512" cy="560" rx="270" ry="300" fill="#6E52F5" stroke="#D5CBFF" stroke-width="10"/>
+    <!-- wings -->
+    <ellipse cx="262" cy="640" rx="70" ry="150" fill="#4B2ED6" transform="rotate(14 262 640)"/>
+    <ellipse cx="762" cy="640" rx="70" ry="150" fill="#4B2ED6" transform="rotate(-14 762 640)"/>
+    <!-- belly with feather scallops -->
+    <ellipse cx="512" cy="680" rx="160" ry="165" fill="#E9E3FF"/>
+    <path d="M430 640 q20 26 40 0 q20 26 40 0 q20 26 40 0 q20 26 40 0" fill="none" stroke="#B7A6FF" stroke-width="12" stroke-linecap="round"/>
+    <path d="M450 710 q20 26 40 0 q20 26 40 0 q20 26 40 0" fill="none" stroke="#B7A6FF" stroke-width="12" stroke-linecap="round"/>
+    <!-- eyes -->
+    <circle cx="410" cy="470" r="108" fill="#fff"/>
+    <circle cx="614" cy="470" r="108" fill="#fff"/>
+    <circle cx="425" cy="482" r="54" fill="#1E1B4B"/>
+    <circle cx="599" cy="482" r="54" fill="#1E1B4B"/>
+    <circle cx="444" cy="460" r="19" fill="#fff"/><circle cx="618" cy="460" r="19" fill="#fff"/>
+    <circle cx="410" cy="502" r="8" fill="#fff" opacity=".8"/><circle cx="584" cy="502" r="8" fill="#fff" opacity=".8"/>
+    <!-- beak -->
+    <path d="M478 560 Q512 545 546 560 L520 612 Q512 624 504 612 Z" fill="#F59E0B"/>
+    <circle cx="330" cy="585" r="30" fill="#FB7185" opacity=".55"/><circle cx="694" cy="585" r="30" fill="#FB7185" opacity=".55"/>
+    <!-- feet -->
+    <path d="M440 850 q12 30 24 0 q12 30 24 0" fill="#F59E0B" stroke="#F59E0B" stroke-width="18" stroke-linejoin="round"/>
+    <path d="M536 850 q12 30 24 0 q12 30 24 0" fill="#F59E0B" stroke="#F59E0B" stroke-width="18" stroke-linejoin="round"/>
+    <!-- graduation cap -->
+    <path d="M512 150 L740 228 L512 306 L284 228 Z" fill="#1E1B4B" stroke="#1E1B4B" stroke-width="16" stroke-linejoin="round"/>
+    <path d="M400 268 L400 318 Q512 360 624 318 L624 268 L512 306 Z" fill="#1E1B4B"/>
+    <path d="M512 228 L700 262 L700 352" fill="none" stroke="#FACC15" stroke-width="14" stroke-linecap="round"/>
+    <circle cx="700" cy="362" r="22" fill="#FACC15"/>
+  </g></g></svg>

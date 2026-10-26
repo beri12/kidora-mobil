@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { Link, router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { authApi, type SelfSignupRole } from '@/api/auth';
-import { Button, Field, FormError, Screen, SectionTitle, Subtitle, Title } from '@/components/ui';
+import { Button, Field, FormError, Mascot, Screen, SectionTitle, Subtitle, Title } from '@/components/ui';
 import { RolePicker } from '@/components/RolePicker';
 import { usePending } from '@/features/auth/pending';
 import { signUpSchema, type SignUpValues } from '@/features/auth/schemas';
@@ -54,6 +54,7 @@ export default function SignUp() {
 
   return (
     <Screen>
+      <Mascot size={88} />
       <Title>Create your Kidora account</Title>
       <Subtitle>It takes a minute. A grown-up should help younger learners.</Subtitle>
       <SectionTitle>How will you use Kidora?</SectionTitle>

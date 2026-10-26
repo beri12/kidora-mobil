@@ -45,8 +45,9 @@ export const useAuth = create<AuthState>()((set, get) => ({
       await cacheProfile(user);
       set({ status: 'signedIn', user, needsRole: !user.roleConfirmed });
     } catch (e) {
-      if (e instanceof ApiError && (e.isNetwork || e.isTimeout)) {
-        // Offline start: open with the cached profile; the server decides later.
+      if (e instanceof ApiError && (e.isNetwork || e.isTimeout || e.status >= 500)) {
+        // Offline start (or the API is down): open with the cached profile;
+        // the server decides later. Only a refused session signs out.
         const raw = await Storage.getItem(PROFILE_KEY).catch(() => null);
         if (raw) {
           const user = JSON.parse(raw) as User;

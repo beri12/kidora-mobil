@@ -34,8 +34,11 @@ screen is native and talks to the same NestJS API the website uses.
 - **Offline:** lessons you opened are cached on the device and shown only when the network
   fails (never to bypass a refusal); content completions are queued with idempotency keys
   and replayed when you're back online. Rewards and grades are always decided by the server.
-- **Feel:** chunky "3D" buttons, bouncing island nodes, animated progress bars, confetti,
-  shake-on-miss, haptics and small generated sounds. All of it can be switched off in Settings.
+- **Feel:** an animated splash (Kai the owl bounces in and spells "Kidora", picking up
+  seamlessly from the native splash), springy "3D" buttons and cards, cards that slide in,
+  a hopping-owl loader, bouncing tab icons, shaking form errors, bouncing island nodes,
+  animated progress bars, confetti, shake-on-miss, haptics and small generated sounds.
+  All of it calms down with the OS "reduce motion" setting or the switch in Settings.
 
 ## Run it
 
@@ -76,7 +79,7 @@ keys or the internal AI-service URL. The app has no use for them: the API holds 
 ```bash
 npm run typecheck     # tsc --noEmit (strict, noUncheckedIndexedAccess)
 npm run lint          # eslint-config-expo, including the React Compiler rules
-npm test              # jest-expo: 54 tests
+npm test              # jest-expo: 57 tests
 npx expo export --platform android --platform ios   # proves both bundles build
 ```
 
@@ -92,7 +95,9 @@ npx eas-cli@latest submit --profile production --platform android
 Before the first store release:
 1. Deploy the two API changes in `docs/BACKEND_CHANGES.md` (social sign-in from the app,
    draft video uploads).
-2. Replace `assets/icon.png`, `assets/splash-icon.png` and the Android adaptive icon with Kidora art.
+2. Check the Kidora owl art in `assets/` (icon, splash, Android adaptive + monochrome icon, favicon).
+   It is drawn in code: edit `scripts/render-brand.js` and run
+   `node scripts/render-brand.js /tmp/brand` (needs Playwright), then copy the PNGs into `assets/`.
 3. Google Play: complete the **Families** policy and Data safety form. Apple: answer the
    **Kids Category** questions and age rating.
 4. Run the app against staging first, and check every role with a real account.

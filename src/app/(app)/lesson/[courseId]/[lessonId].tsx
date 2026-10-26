@@ -78,16 +78,24 @@ function LessonScreen({ courseId, lessonId }: { courseId: string; lessonId: stri
         }
       }
     }
+    const timeSpentSec = Math.max(0, Math.round((nowMs() - started.current) / 1000));
     try {
       if (offline) throw new ApiError('offline', { isNetwork: true });
-      const res = await learningApi.completeLesson(lesson.id, (nowMs() - started.current) / 1000);
+      const res = await learningApi.completeLesson(lesson.id, timeSpentSec);
       feedback.complete();
       setFinish({ kind: 'done', rewards: res.rewards });
       qc.invalidateQueries({ queryKey: ['student'] });
       qc.invalidateQueries({ queryKey: ['course', courseId] });
     } catch (e) {
-      if (e instanceof ApiError && (e.isNetwork || e.isTimeout)) setFinish({ kind: 'queued' });
-      else setError(e instanceof Error ? e.message : 'Could not finish the lesson.');
+      if (e instanceof ApiError && (e.isNetwork || e.isTimeout)) {
+        // The server only completes a lesson by itself when it has required
+        // items, so the lesson completion is queued too (idempotent: XP is
+        // granted once). It runs after the content items queued above.
+        await offlineQueue
+          .enqueue({ id: `lesson-complete:${lesson.id}`, kind: 'lesson.complete', method: 'POST', path: `/learning/lessons/${encodeURIComponent(lesson.id)}/complete?timeSpentSec=${timeSpentSec}`, body: undefined })
+          .catch(() => undefined);
+        setFinish({ kind: 'queued' });
+      } else setError(e instanceof Error ? e.message : 'Could not finish the lesson.');
     } finally {
       setBusy(false);
     }

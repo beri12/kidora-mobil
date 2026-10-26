@@ -2,6 +2,8 @@
 
 Two small, backward-compatible changes in `kidora-api`. The website keeps working exactly
 as before; both changes only add an optional behaviour that the app asks for.
+Implemented in `beri12/Kiddora-learning` on branch `claude/mobile-app-support` (tests included).
+App redirects: `kidora://auth/callback#code=…&needsRole=0|1`, or `#error=cancelled|failed&provider=…`.
 **They take effect only after the API is deployed** (merge the PR, wait for the
 "Kidora Container Images" workflow, then `update.sh <sha>` on the server).
 

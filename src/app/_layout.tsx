@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AnimatedSplash } from '@/components/AnimatedSplash';
 import { startSync } from '@/offline/sync';
 import { useAuth } from '@/stores/auth';
 import { colors } from '@/theme';
@@ -19,8 +20,16 @@ export default function RootLayout() {
   const status = useAuth((s) => s.status);
   const bootstrap = useAuth((s) => s.bootstrap);
 
+  const [splashGone, setSplashGone] = useState(false);
+  const hideNativeSplash = useCallback(() => {
+    SplashScreen.hideAsync().catch(() => undefined);
+  }, []);
+  const finishSplash = useCallback(() => setSplashGone(true), []);
+
   useEffect(() => {
-    bootstrap().finally(() => SplashScreen.hideAsync().catch(() => undefined));
+    // A keystore that can't be read (e.g. after a reinstall) must not leave
+    // the app on its splash screen: start signed out instead.
+    bootstrap().catch(() => useAuth.setState({ status: 'signedOut', user: null }));
   }, [bootstrap]);
 
   useEffect(() => {
@@ -31,22 +40,23 @@ export default function RootLayout() {
     return startSync();
   }, [status]);
 
-  if (status === 'loading') return null; // the splash screen stays up
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <StatusBar style="dark" />
-          <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.iris50 } }}>
-            <Stack.Protected guard={status === 'signedIn'}>
-              <Stack.Screen name="(app)" />
-            </Stack.Protected>
-            <Stack.Protected guard={status !== 'signedIn'}>
-              <Stack.Screen name="(auth)" />
-            </Stack.Protected>
-            <Stack.Screen name="auth/callback" />
-          </Stack>
+          {status !== 'loading' && (
+            <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.iris50 } }}>
+              <Stack.Protected guard={status === 'signedIn'}>
+                <Stack.Screen name="(app)" />
+              </Stack.Protected>
+              <Stack.Protected guard={status !== 'signedIn'}>
+                <Stack.Screen name="(auth)" />
+              </Stack.Protected>
+              <Stack.Screen name="auth/callback" />
+            </Stack>
+          )}
+          {!splashGone && <AnimatedSplash ready={status !== 'loading'} onShown={hideNativeSplash} onDone={finishSplash} />}
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

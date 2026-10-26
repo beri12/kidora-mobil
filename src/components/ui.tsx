@@ -1,6 +1,5 @@
-import { forwardRef, useEffect, type ReactNode } from 'react';
+import { forwardRef, useEffect, useState, type ReactNode } from 'react';
 import {
-  ActivityIndicator,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -13,7 +12,8 @@ import {
   type TextInputProps,
   type ViewStyle,
 } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import { Image } from 'expo-image';
+import Animated, { useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, font, radius, space } from '@/theme';
 import { feedback, useCalmMotion } from '@/utils/feedback';
@@ -58,6 +58,39 @@ export function SectionTitle({ children, action }: { children: ReactNode; action
   );
 }
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const PRESS_IN = { damping: 15, stiffness: 400 };
+const PRESS_OUT = { damping: 6, stiffness: 300 };
+
+/** A springy squash while pressed. Static when motion is reduced. */
+function usePressScale(to = 0.96) {
+  const calm = useCalmMotion();
+  const scale = useSharedValue(1);
+  const style = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  return {
+    style,
+    in: () => {
+      if (!calm) scale.set(withSpring(to, PRESS_IN));
+    },
+    out: () => {
+      scale.set(calm ? 1 : withSpring(1, PRESS_OUT));
+    },
+  };
+}
+
+/* ------------------------------------------------------------------ appear */
+
+/** Fades and rises its children in on mount; `delay` staggers a list. */
+export function Appear({ children, delay = 0, style }: { children: ReactNode; delay?: number; style?: StyleProp<ViewStyle> }) {
+  const calm = useCalmMotion();
+  const t = useSharedValue(calm ? 1 : 0);
+  useEffect(() => {
+    if (!calm) t.value = withDelay(delay, withTiming(1, { duration: 320 }));
+  }, [calm, delay, t]);
+  const anim = useAnimatedStyle(() => ({ opacity: t.value, transform: [{ translateY: (1 - t.value) * 14 }] }));
+  return <Animated.View style={[style, anim]}>{children}</Animated.View>;
+}
+
 /* ------------------------------------------------------------------ button */
 
 type Variant = 'primary' | 'secondary' | 'success' | 'ghost' | 'danger';
@@ -79,11 +112,13 @@ const VARIANT: Record<Variant, { bg: string; fg: string; border?: string; shadow
 };
 
 /** A chunky, pressable button with a "3D" lip that sinks when pressed. */
-export function Button({ title, variant = 'primary', busy, disabled, icon, style, onPress, ...rest }: ButtonProps) {
+export function Button({ title, variant = 'primary', busy, disabled, icon, style, onPress, onPressIn, onPressOut, ...rest }: ButtonProps) {
   const v = VARIANT[variant];
   const off = disabled || busy;
+  const [pressed, setPressed] = useState(false);
+  const squash = usePressScale();
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityRole="button"
       accessibilityState={{ disabled: !!off, busy: !!busy }}
       disabled={off}
@@ -91,7 +126,17 @@ export function Button({ title, variant = 'primary', busy, disabled, icon, style
         feedback.tap();
         onPress?.(e);
       }}
-      style={({ pressed }) => [
+      onPressIn={(e) => {
+        setPressed(true);
+        squash.in();
+        onPressIn?.(e);
+      }}
+      onPressOut={(e) => {
+        setPressed(false);
+        squash.out();
+        onPressOut?.(e);
+      }}
+      style={[
         styles.button,
         {
           backgroundColor: v.bg,
@@ -102,31 +147,66 @@ export function Button({ title, variant = 'primary', busy, disabled, icon, style
           opacity: off ? 0.55 : 1,
         },
         style,
+        squash.style,
       ]}
       {...rest}
     >
-      {busy ? <ActivityIndicator color={v.fg} /> : icon}
+      {busy ? <BusyDots color={v.fg} /> : icon}
       <Text style={[styles.buttonText, { color: v.fg }]}>{title}</Text>
-    </Pressable>
+    </AnimatedPressable>
+  );
+}
+
+/** Three bouncing dots: a friendlier "working on it" than a spinner. */
+function Dot({ color, index, calm }: { color: string; index: number; calm: boolean }) {
+  const y = useSharedValue(0);
+  useEffect(() => {
+    if (calm) return;
+    y.value = withDelay(index * 120, withRepeat(withSequence(withTiming(-5, { duration: 260 }), withTiming(0, { duration: 260 })), -1));
+  }, [calm, index, y]);
+  const style = useAnimatedStyle(() => ({ transform: [{ translateY: y.value }] }));
+  return <Animated.View style={[{ width: 7, height: 7, borderRadius: 4, backgroundColor: color }, style]} />;
+}
+
+function BusyDots({ color }: { color: string }) {
+  const calm = useCalmMotion();
+  return (
+    <View style={{ flexDirection: 'row', gap: 4, paddingVertical: 4 }} accessibilityLabel="Working">
+      {[0, 1, 2].map((i) => (
+        <Dot key={i} index={i} color={color} calm={calm} />
+      ))}
+    </View>
   );
 }
 
 /* -------------------------------------------------------------------- card */
 
-export function Card({ children, style, onPress, accessibilityLabel }: { children: ReactNode; style?: StyleProp<ViewStyle>; onPress?: () => void; accessibilityLabel?: string }) {
-  if (!onPress) return <View style={[styles.card, style]}>{children}</View>;
+/** A card that slides in when it first appears; tappable cards squash when pressed. */
+export function Card({ children, style, onPress, accessibilityLabel, delay = 0 }: { children: ReactNode; style?: StyleProp<ViewStyle>; onPress?: () => void; accessibilityLabel?: string; delay?: number }) {
+  const squash = usePressScale(0.97);
+  if (!onPress) {
+    return (
+      <Appear delay={delay} style={[styles.card, style]}>
+        {children}
+      </Appear>
+    );
+  }
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
-      onPress={() => {
-        feedback.tap();
-        onPress();
-      }}
-      style={({ pressed }) => [styles.card, pressed && { transform: [{ scale: 0.98 }] }, style]}
-    >
-      {children}
-    </Pressable>
+    <Appear delay={delay}>
+      <AnimatedPressable
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel}
+        onPress={() => {
+          feedback.tap();
+          onPress();
+        }}
+        onPressIn={squash.in}
+        onPressOut={squash.out}
+        style={[styles.card, style, squash.style]}
+      >
+        {children}
+      </AnimatedPressable>
+    </Appear>
   );
 }
 
@@ -138,7 +218,8 @@ interface FieldProps extends TextInputProps {
   hint?: string;
 }
 
-export const Field = forwardRef<TextInputInstance, FieldProps>(function Field({ label, error, hint, style, ...rest }, ref) {
+export const Field = forwardRef<TextInputInstance, FieldProps>(function Field({ label, error, hint, style, onFocus, onBlur, ...rest }, ref) {
+  const [focused, setFocused] = useState(false);
   return (
     <View style={{ marginBottom: space.md }}>
       <Text style={styles.label}>{label}</Text>
@@ -146,7 +227,15 @@ export const Field = forwardRef<TextInputInstance, FieldProps>(function Field({ 
         ref={ref}
         accessibilityLabel={label}
         placeholderTextColor="#94A3B8"
-        style={[styles.input, error ? { borderColor: colors.coral500 } : null, style]}
+        style={[styles.input, focused ? styles.inputFocused : null, error ? { borderColor: colors.coral500 } : null, style]}
+        onFocus={(e) => {
+          setFocused(true);
+          onFocus?.(e);
+        }}
+        onBlur={(e) => {
+          setFocused(false);
+          onBlur?.(e);
+        }}
         {...rest}
       />
       {error ? (
@@ -160,12 +249,20 @@ export const Field = forwardRef<TextInputInstance, FieldProps>(function Field({ 
   );
 });
 
+/** Shakes in, like a gentle "no", whenever its message changes. */
 export function FormError({ children }: { children?: string | null }) {
+  const calm = useCalmMotion();
+  const x = useSharedValue(0);
+  useEffect(() => {
+    if (!children || calm) return;
+    x.value = withSequence(withTiming(-8, { duration: 50 }), withTiming(8, { duration: 70 }), withTiming(-5, { duration: 60 }), withTiming(0, { duration: 50 }));
+  }, [children, calm, x]);
+  const shake = useAnimatedStyle(() => ({ transform: [{ translateX: x.value }] }));
   if (!children) return null;
   return (
-    <View style={styles.formError} accessibilityLiveRegion="assertive">
+    <Animated.View style={[styles.formError, shake]} accessibilityLiveRegion="assertive">
       <Text style={{ color: colors.danger, fontWeight: '700' }}>{children}</Text>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -220,10 +317,43 @@ export function PopIn({ children, delay = 0 }: { children: ReactNode; delay?: nu
 
 /* ------------------------------------------------- loading / error / empty */
 
-export function Loading({ label = 'Loading…' }: { label?: string }) {
+const OWL = require('../../assets/images/kidora-owl.png');
+
+/** Kai the owl, Kidora's mascot, floating gently above a screen's title. */
+export function Mascot({ size = 110 }: { size?: number }) {
+  const calm = useCalmMotion();
+  const y = useSharedValue(0);
+  const tilt = useSharedValue(0);
+  useEffect(() => {
+    if (calm) return;
+    y.value = withRepeat(withSequence(withTiming(-8, { duration: 1100 }), withTiming(0, { duration: 1100 })), -1);
+    tilt.value = withRepeat(withSequence(withTiming(-4, { duration: 1600 }), withTiming(4, { duration: 1600 })), -1, true);
+  }, [calm, y, tilt]);
+  const float = useAnimatedStyle(() => ({ transform: [{ translateY: y.value }, { rotate: `${tilt.value}deg` }] }));
   return (
-    <View style={styles.center} accessibilityLiveRegion="polite">
-      <ActivityIndicator size="large" color={colors.iris600} />
+    <PopIn>
+      <Animated.View style={[{ alignSelf: 'center', marginTop: space.lg }, float]}>
+        <Image source={OWL} style={{ width: size, height: size }} contentFit="contain" accessibilityLabel="Kai the owl" />
+      </Animated.View>
+    </PopIn>
+  );
+}
+
+/** Kai the owl hops while a screen loads. */
+export function Loading({ label = 'Loading…' }: { label?: string }) {
+  const calm = useCalmMotion();
+  const y = useSharedValue(0);
+  useEffect(() => {
+    if (calm) return;
+    y.value = withRepeat(withSequence(withTiming(-14, { duration: 320 }), withSpring(0, { damping: 6, stiffness: 220 })), -1);
+  }, [calm, y]);
+  const hop = useAnimatedStyle(() => ({ transform: [{ translateY: y.value }] }));
+  return (
+    <View style={styles.center} accessibilityLiveRegion="polite" accessibilityLabel={label}>
+      <Animated.View style={hop}>
+        <Image source={OWL} style={{ width: 84, height: 84 }} contentFit="contain" accessibilityIgnoresInvertColors />
+      </Animated.View>
+      <View style={styles.shadow} />
       <Text style={[font.small, { marginTop: space.sm }]}>{label}</Text>
     </View>
   );
@@ -232,7 +362,9 @@ export function Loading({ label = 'Loading…' }: { label?: string }) {
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
     <View style={styles.center}>
-      <Text style={{ fontSize: 44 }}>🛰️</Text>
+      <PopIn>
+        <Text style={{ fontSize: 44 }}>🛰️</Text>
+      </PopIn>
       <Text style={[font.body, { textAlign: 'center', marginVertical: space.md }]}>{message}</Text>
       {onRetry && <Button title="Try again" variant="secondary" onPress={onRetry} />}
     </View>
@@ -242,7 +374,9 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
 export function Empty({ emoji = '🌱', title, children }: { emoji?: string; title: string; children?: ReactNode }) {
   return (
     <View style={styles.center}>
-      <Text style={{ fontSize: 44 }}>{emoji}</Text>
+      <PopIn>
+        <Text style={{ fontSize: 44 }}>{emoji}</Text>
+      </PopIn>
       <Text style={[font.h2, { textAlign: 'center', marginTop: space.sm }]}>{title}</Text>
       {children ? <Text style={[font.small, { textAlign: 'center', marginTop: space.xs }]}>{children}</Text> : null}
     </View>
@@ -284,6 +418,8 @@ const styles = StyleSheet.create({
     color: colors.ink,
     backgroundColor: colors.white,
   },
+  inputFocused: { borderColor: colors.iris500, backgroundColor: '#FDFCFF' },
+  shadow: { width: 46, height: 8, borderRadius: 4, backgroundColor: colors.iris100, marginTop: 2 },
   error: { color: colors.danger, fontWeight: '700', marginTop: space.xs },
   formError: { backgroundColor: '#FEF2F2', borderRadius: radius.sm, padding: space.md, marginBottom: space.md },
   track: { backgroundColor: colors.line, overflow: 'hidden', width: '100%' },

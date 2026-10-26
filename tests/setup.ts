@@ -36,9 +36,11 @@ jest.mock('react-native-reanimated', () => {
     const box = { value: initial, get: () => box.value, set: (v: T) => { box.value = v; } };
     return box;
   };
+  const createAnimatedComponent = <C,>(c: C) => c;
   return {
     __esModule: true,
-    default: { View: RN.View, Text: RN.Text, ScrollView: RN.ScrollView },
+    default: { View: RN.View, Text: RN.Text, ScrollView: RN.ScrollView, createAnimatedComponent },
+    createAnimatedComponent,
     useSharedValue: shared,
     useAnimatedStyle: (fn: () => object) => fn(),
     useReducedMotion: () => false,
@@ -47,6 +49,6 @@ jest.mock('react-native-reanimated', () => {
     withDelay: (_d: number, v: unknown) => v,
     withRepeat: now,
     withSequence: (...vs: unknown[]) => vs[vs.length - 1],
-    Easing: { out: () => undefined, quad: undefined },
+    Easing: { out: () => undefined, in: () => undefined, quad: undefined },
   };
 });

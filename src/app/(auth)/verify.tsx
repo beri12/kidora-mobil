@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { Text } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { authApi } from '@/api/auth';
-import { Button, FormError, Screen, Subtitle, Title } from '@/components/ui';
+import { Button, FormError, Subtitle, Title } from '@/components/ui';
+import { AuthScreen } from '@/components/AuthScreen';
 import { CodeInput } from '@/components/CodeInput';
 import { usePending } from '@/features/auth/pending';
 import { useAuth } from '@/stores/auth';
@@ -27,10 +28,10 @@ export default function Verify() {
 
   if (!pending) {
     return (
-      <Screen>
+      <AuthScreen>
         <Title>Nothing to verify</Title>
         <Button title="Back to log in" onPress={() => router.replace('/sign-in')} style={{ marginTop: space.xl }} />
-      </Screen>
+      </AuthScreen>
     );
   }
 
@@ -77,7 +78,7 @@ export default function Verify() {
   }
 
   return (
-    <Screen>
+    <AuthScreen>
       <Text style={{ fontSize: 52, textAlign: 'center', marginTop: space.xl }}>{sms ? '📱' : '📬'}</Text>
       <Title>{sms ? 'Check your phone' : 'Check your email'}</Title>
       <Subtitle>
@@ -95,6 +96,6 @@ export default function Verify() {
       <Button title="Verify" busy={busy} disabled={code.length !== length} onPress={() => verify()} style={{ marginTop: space.xl }} />
       <Button title={wait > 0 ? `Resend code in ${wait}s` : 'Send a new code'} variant="ghost" disabled={wait > 0} onPress={resend} style={{ marginTop: space.sm }} />
       <Text style={[font.small, { textAlign: 'center', marginTop: space.md }]}>Wrong details? Go back and edit them.</Text>
-    </Screen>
+    </AuthScreen>
   );
 }

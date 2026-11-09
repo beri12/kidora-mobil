@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { parentApi } from '@/api/roles';
 import { Button, Card, Empty, ErrorState, Loading, ProgressBar, SectionTitle, Title } from '@/components/ui';
 import { useSelectedChild } from '@/features/parent-child';
-import { colors, font, islandTheme, radius, space } from '@/theme';
+import { colors, font, fonts, islandTheme, radius, space } from '@/theme';
 
 export default function Family() {
   const childId = useSelectedChild((s) => s.childId);
@@ -41,7 +41,7 @@ export default function Family() {
                     onPress={() => select(c.id)}
                     style={{ paddingHorizontal: space.md, paddingVertical: space.sm, borderRadius: radius.pill, backgroundColor: on ? colors.iris600 : colors.white, borderWidth: 2, borderColor: colors.iris200 }}
                   >
-                    <Text style={{ fontWeight: '800', color: on ? colors.white : colors.ink }}>{c.displayName || c.name}</Text>
+                    <Text style={{ fontFamily: fonts.extrabold, color: on ? colors.white : colors.ink }}>{c.displayName || c.name}</Text>
                     {c.grade ? <Text style={{ fontSize: 12, color: on ? colors.iris100 : colors.muted }}>{c.grade}</Text> : null}
                   </Pressable>
                 );
@@ -126,7 +126,7 @@ export default function Family() {
                 <SectionTitle>Coming up</SectionTitle>
                 {d.upcomingAssignments.slice(0, 5).map((a) => (
                   <Card key={a.id}>
-                    <Text style={[font.body, { fontWeight: '800' }]}>{a.title}</Text>
+                    <Text style={[font.body, { fontFamily: fonts.extrabold }]}>{a.title}</Text>
                     <Text style={font.small}>
                       {a.subject}
                       {a.dueAt ? ` · due ${new Date(a.dueAt).toLocaleDateString()}` : ''} · {a.status.toLowerCase()}

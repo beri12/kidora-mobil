@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { authApi } from '@/api/auth';
-import { Button, Field, FormError, Screen, Subtitle, Title } from '@/components/ui';
+import { Button, Field, FormError, Subtitle, Title } from '@/components/ui';
+import { AuthScreen } from '@/components/AuthScreen';
 import { CodeInput } from '@/components/CodeInput';
 import { passwordSchema } from '@/features/auth/schemas';
 import { useAuth } from '@/stores/auth';
@@ -31,7 +32,7 @@ export default function Reset() {
   }
 
   return (
-    <Screen>
+    <AuthScreen>
       <Title>Choose a new password</Title>
       <Subtitle>
         Enter the {length}-digit code we sent to {masked || email}.
@@ -40,6 +41,6 @@ export default function Reset() {
       <CodeInput length={length} value={code} onChange={setCode} />
       <Field label="New password" secureTextEntry autoComplete="new-password" value={password} onChangeText={setPassword} hint="8+ characters with a letter and a number" style={{ marginTop: space.lg }} />
       <Button title="Save and log in" busy={busy} disabled={code.length !== length} onPress={reset} />
-    </Screen>
+    </AuthScreen>
   );
 }

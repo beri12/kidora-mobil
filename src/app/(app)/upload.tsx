@@ -18,7 +18,7 @@ import {
   type UploadKind,
 } from '@/api/uploads';
 import { Button, Card, Field, FormError, ProgressBar, SectionTitle } from '@/components/ui';
-import { colors, font, radius, space } from '@/theme';
+import { colors, font, fonts, radius, space } from '@/theme';
 import { feedback } from '@/utils/feedback';
 
 type Picked = { uri: string; name: string; mimeType: string; size: number; kind: UploadKind };
@@ -29,7 +29,7 @@ const PICK_TYPES = ['application/pdf', 'image/*', 'audio/*', 'video/mp4', 'video
 function Chip({ label, on, onPress }: { label: string; on: boolean; onPress: () => void }) {
   return (
     <Pressable accessibilityRole="radio" accessibilityState={{ checked: on }} onPress={onPress} style={{ paddingHorizontal: space.md, paddingVertical: 8, borderRadius: radius.pill, borderWidth: 2, borderColor: on ? colors.iris600 : colors.line, backgroundColor: on ? colors.iris100 : colors.white, marginRight: space.sm, marginBottom: space.sm }}>
-      <Text style={{ fontWeight: '700', color: colors.ink }}>{label}</Text>
+      <Text style={{ fontFamily: fonts.bold, color: colors.ink }}>{label}</Text>
     </Pressable>
   );
 }
@@ -136,7 +136,7 @@ export default function Upload() {
       <Button title={file ? 'Choose a different file' : 'Choose a file'} variant="secondary" disabled={busy} onPress={pick} />
       {file && (
         <Card style={{ marginTop: space.md }}>
-          <Text style={[font.body, { fontWeight: '800' }]}>{file.name}</Text>
+          <Text style={[font.body, { fontFamily: fonts.extrabold }]}>{file.name}</Text>
           <Text style={font.small}>
             {file.kind} · {file.mimeType} · {mb(file.size)}
           </Text>
@@ -181,7 +181,7 @@ export default function Upload() {
           <SectionTitle>5. Review and publish</SectionTitle>
           {done.kind === 'video' ? (
             <Card>
-              <Text style={[font.body, { fontWeight: '800' }]}>🎬 {done.video.contentItem.title}</Text>
+              <Text style={[font.body, { fontFamily: fonts.extrabold }]}>🎬 {done.video.contentItem.title}</Text>
               <Text style={font.small}>
                 {done.video.visibleToStudents
                   ? '⚠️ This video is already visible to students in the lesson: the server published it and it could not be moved back to draft. Unpublish it on justkidora.com if it is not ready.'
@@ -195,13 +195,13 @@ export default function Upload() {
             </Card>
           ) : (
             <Card>
-              <Text style={[font.body, { fontWeight: '800' }]}>📄 {done.file.name}</Text>
+              <Text style={[font.body, { fontFamily: fonts.extrabold }]}>📄 {done.file.name}</Text>
               <Text style={font.small}>In your library. It reaches students only when you add it to a lesson.</Text>
             </Card>
           )}
           {published ? (
             <Card style={{ backgroundColor: colors.grass100, borderColor: colors.grass100 }}>
-              <Text style={[font.body, { fontWeight: '800', color: colors.grass600 }]}>✅ Published to the lesson.</Text>
+              <Text style={[font.body, { fontFamily: fonts.extrabold, color: colors.grass600 }]}>✅ Published to the lesson.</Text>
             </Card>
           ) : (
             <Button

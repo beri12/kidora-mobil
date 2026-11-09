@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { teacherApi } from '@/api/roles';
 import { Button, Card, Empty, ErrorState, Field, Loading, Title } from '@/components/ui';
 import { useDebounced } from '@/hooks/useDebounced';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 
 const KIND_EMOJI: Record<string, string> = { video: '🎬', document: '📄', image: '🖼️', audio: '🎧', other: '📦' };
 
@@ -34,7 +34,7 @@ export default function Library() {
         ListEmptyComponent={q.isPending || q.error ? undefined : <Empty emoji="📚" title="Your library is empty">Upload a worksheet, picture, audio clip or lesson video.</Empty>}
         renderItem={({ item: r }) => (
           <Card onPress={() => WebBrowser.openBrowserAsync(r.url)} accessibilityLabel={`Open ${r.name}`}>
-            <Text style={[font.body, { fontWeight: '800' }]}>
+            <Text style={[font.body, { fontFamily: fonts.extrabold }]}>
               {KIND_EMOJI[r.kind] ?? '📦'} {r.name}
             </Text>
             <Text style={font.small}>

@@ -101,7 +101,8 @@ work in `beri12/kidora` · **U** = needs a decision or credential from the owner
 ## Phase 7 — Hardening and release
 
 - [x] `eas.json` profiles (development, preview APK, production)
-- [ ] Real app icon / splash art
+- [x] App icon, adaptive icon, splash, favicon from the justkidora.com wordmark — 2026-11-09
+- [ ] Designer-made icon art, if the brand team has one (the website ships no favicon)
 - [ ] **B** Account deletion + parental consent records (store requirements)
 - [ ] **B** Push token endpoint; then Expo Notifications
 - [ ] Crash reporting with PII scrubbing (U: vendor)
@@ -130,3 +131,24 @@ APIs reused: `GET /auth/providers`, `POST /courses/access-code/join`,
 Checks run: `tsc --noEmit` ✅, `expo lint` ✅, `jest` ✅ 84/84 (was 54), `expo export` for
 Android and iOS ✅ (Hermes bundles 5.3 MB each). Not run: device builds (EAS needs the owner's
 Expo account), anything against the live API.
+
+### 2026-11-09 (later) — launch fix + justkidora.com brand
+
+Reported: launching the app showed only "Kidora" and then Expo Router's "Unmatched Route".
+Cause: the app opens at `/`, and the only `/` screen was `(app)/index.tsx`, inside the
+signed-in group that `Stack.Protected` removes while signed out. Fix: `src/app/index.tsx`
+outside both groups redirects to sign-in, the role step, or the role's home. Also
+`unstable_settings.initialRouteName` → `anchor` (deprecated in this expo-router).
+
+Brand, taken from `kidora-web` (the website itself was unreachable from the sandbox):
+- Fonts Baloo 2 (700, 800) and Nunito (600–900) via `@expo-google-fonts/*`, loaded before the
+  splash hides. Every `fontWeight` in `src/` was replaced by the matching `fonts.*` family
+  (Android ignores `fontWeight` on custom fonts).
+- `KidoraLogo` (wordmark + star + "Learn • Play • Grow"), `AuthScreen` (gradient + floating
+  shapes + white card) on all six signed-out screens; gradient on every other screen and tab.
+- Sign-in copy now matches the website ("Welcome back!").
+- New icon/adaptive icon/splash/favicon rendered from the real fonts.
+
+Checked in a browser (Expo web) at 390×844: launch → `/sign-in` (was Unmatched Route), sign-up,
+and a mocked sign-in → `/home` with tabs. `tsc` ✅ `lint` ✅ `jest` 84/84 ✅ `expo export`
+Android + iOS ✅ (5.5 MB each, fonts ≈1.4 MB). Not checked: a real device.

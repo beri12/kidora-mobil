@@ -3,7 +3,7 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated';
 import type { AttemptResult, Challenge, Dir, Move } from '@/api/games';
 import { Button } from '@/components/ui';
-import { colors, font, radius, space } from '@/theme';
+import { colors, font, fonts, radius, space } from '@/theme';
 import { feedback, useCalmMotion } from '@/utils/feedback';
 
 type Submit = (answer: unknown) => Promise<AttemptResult | null>;
@@ -116,7 +116,7 @@ export function CodePathChallenge({ challenge, onSubmit, locked }: { challenge: 
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, minHeight: 44, padding: 6, borderRadius: radius.sm, backgroundColor: colors.white, borderWidth: 2, borderColor: colors.line }}>
         {program.map((b, i) => (
           <Pressable key={i} accessibilityLabel={`Remove block ${i + 1}, ${BLOCK_LABEL[b]}`} onPress={() => !running && setProgram((p) => p.filter((_, j) => j !== i))} style={{ backgroundColor: colors.iris500, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 6 }}>
-            <Text style={{ color: colors.white, fontWeight: '800' }}>{BLOCK_LABEL[b].split(' ')[0]}</Text>
+            <Text style={{ color: colors.white, fontFamily: fonts.extrabold }}>{BLOCK_LABEL[b].split(' ')[0]}</Text>
           </Pressable>
         ))}
       </View>

@@ -19,8 +19,8 @@ export const am: Dictionary = {
     library: 'ቤተ-መጻሕፍት',
   },
   signIn: {
-    title: 'እንኳን ወደ Kidora በደህና ተመለሱ',
-    subtitle: 'መማርዎን ለመቀጠል ይግቡ።',
+    title: 'እንኳን በደህና ተመለሱ!',
+    subtitle: 'የመማር ጉዞዎን ለመቀጠል ይግቡ።',
     email: 'ኢሜይል',
     password: 'የይለፍ ቃል',
     mfaCode: 'የማረጋገጫ መተግበሪያ ኮድ',

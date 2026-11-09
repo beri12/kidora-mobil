@@ -4,13 +4,14 @@ import { Link, router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { authApi } from '@/api/auth';
 import { ApiError } from '@/api/client';
-import { Button, Field, FormError, PopIn, Screen, Subtitle, Title } from '@/components/ui';
+import { Button, Field, FormError, Subtitle, Title } from '@/components/ui';
+import { AuthScreen } from '@/components/AuthScreen';
 import { pendingFromError, usePending } from '@/features/auth/pending';
 import { signInSchema, type SignInValues } from '@/features/auth/schemas';
 import { SocialButtons } from '@/features/auth/SocialButtons';
 import { useT } from '@/i18n';
 import { useAuth } from '@/stores/auth';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 import { zodResolver } from '@/utils/form';
 
 export default function SignIn() {
@@ -48,10 +49,7 @@ export default function SignIn() {
   };
 
   return (
-    <Screen>
-      <PopIn>
-        <Text style={{ fontSize: 56, textAlign: 'center', marginTop: space.xl }}>🦉</Text>
-      </PopIn>
+    <AuthScreen>
       <Title>{t('signIn.title')}</Title>
       <Subtitle>{t('signIn.subtitle')}</Subtitle>
       <View style={{ marginTop: space.xl }}>
@@ -75,7 +73,7 @@ export default function SignIn() {
         {mfa !== null && (
           <Field label={t('signIn.mfaCode')} keyboardType="number-pad" maxLength={6} value={mfa} onChangeText={setMfa} autoFocus />
         )}
-        <Link href="/forgot" style={{ color: colors.iris700, fontWeight: '800', marginBottom: space.md, textAlign: 'right' }}>
+        <Link href="/forgot" style={{ color: colors.iris700, fontFamily: fonts.extrabold, marginBottom: space.md, textAlign: 'right' }}>
           {t('signIn.forgot')}
         </Link>
         <Button title={t('signIn.submit')} busy={formState.isSubmitting} onPress={submit} />
@@ -84,10 +82,10 @@ export default function SignIn() {
       <SocialButtons />
       <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: space.xl }}>
         <Text style={font.body}>{t('signIn.newHere')}</Text>
-        <Link href="/sign-up" style={{ color: colors.iris700, fontWeight: '800', fontSize: 16 }}>
+        <Link href="/sign-up" style={{ color: colors.iris700, fontFamily: fonts.extrabold, fontSize: 16 }}>
           {t('signIn.createAccount')}
         </Link>
       </View>
-    </Screen>
+    </AuthScreen>
   );
 }

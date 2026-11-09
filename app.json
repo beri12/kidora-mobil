@@ -17,7 +17,7 @@
     "android": {
       "package": "com.justkidora.app",
       "adaptiveIcon": {
-        "backgroundColor": "#F3F0FF",
+        "backgroundColor": "#5B3CF0",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -49,9 +49,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#F3F0FF",
+          "backgroundColor": "#F1EEFF",
           "image": "./assets/splash-icon.png",
-          "imageWidth": 200
+          "imageWidth": 240
         }
       ]
     ],

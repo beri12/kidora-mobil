@@ -1,18 +1,24 @@
 import { Stack } from 'expo-router';
 import { useAuth } from '@/stores/auth';
-import { colors } from '@/theme';
-
-export const unstable_settings = { initialRouteName: 'index' };
+import { colors, fonts } from '@/theme';
 
 export default function AppLayout() {
   const needsRole = useAuth((s) => s.needsRole);
   return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.iris50 } }}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: colors.bgVia },
+        headerTitleStyle: { fontFamily: fonts.display, color: colors.ink },
+        headerTintColor: colors.iris700,
+        headerShadowVisible: false,
+        headerStyle: { backgroundColor: colors.bgFrom },
+      }}
+    >
       <Stack.Protected guard={needsRole}>
         <Stack.Screen name="role" />
       </Stack.Protected>
       <Stack.Protected guard={!needsRole}>
-        <Stack.Screen name="index" />
         <Stack.Screen name="(student)" />
         <Stack.Screen name="(parent)" />
         <Stack.Screen name="(teacher)" />

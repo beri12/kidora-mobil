@@ -6,13 +6,13 @@ import { Button, Card, Screen, SectionTitle } from '@/components/ui';
 import { LANGUAGES, useT, type LanguagePref } from '@/i18n';
 import { useAuth } from '@/stores/auth';
 import { useSettings } from '@/stores/settings';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 
 function Row({ label, hint, value, onChange }: { label: string; hint: string; value: boolean; onChange: (v: boolean) => void }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: space.sm }}>
       <View style={{ flex: 1 }}>
-        <Text style={[font.body, { fontWeight: '800' }]}>{label}</Text>
+        <Text style={[font.body, { fontFamily: fonts.extrabold }]}>{label}</Text>
         <Text style={font.small}>{hint}</Text>
       </View>
       <Switch value={value} onValueChange={onChange} accessibilityLabel={label} trackColor={{ true: colors.iris500 }} />

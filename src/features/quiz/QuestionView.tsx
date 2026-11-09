@@ -1,7 +1,7 @@
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { Image } from 'expo-image';
 import type { QuizQuestion } from '@/api/quizzes';
-import { colors, font, radius, space } from '@/theme';
+import { colors, font, fonts, radius, space } from '@/theme';
 import { feedback } from '@/utils/feedback';
 
 export type AnswerValue = number | number[] | string | string[] | undefined;
@@ -85,7 +85,7 @@ export function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: A
           <Text style={[font.small, { marginBottom: space.sm }]}>Put these in the right order.</Text>
           {order.map((optIndex, pos) => (
             <View key={optIndex} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: colors.white, borderRadius: radius.md, borderWidth: 2, borderColor: colors.line, padding: space.sm, marginBottom: space.sm }}>
-              <Text style={{ width: 28, fontWeight: '800', color: colors.iris700 }}>{pos + 1}.</Text>
+              <Text style={{ width: 28, fontFamily: fonts.extrabold, color: colors.iris700 }}>{pos + 1}.</Text>
               <Text style={[font.body, { flex: 1 }]}>{q.options[optIndex]}</Text>
               <Pressable accessibilityLabel={`Move ${q.options[optIndex]} up`} onPress={() => move(pos, pos - 1)} style={{ padding: 8 }}>
                 <Text style={{ fontSize: 20 }}>⬆️</Text>
@@ -107,7 +107,7 @@ export function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: A
           {header}
           {lefts.map((l, i) => (
             <View key={l} style={{ marginBottom: space.md }}>
-              <Text style={[font.body, { fontWeight: '800' }]}>{l} →</Text>
+              <Text style={[font.body, { fontFamily: fonts.extrabold }]}>{l} →</Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, marginTop: 4 }}>
                 {rights.map((r) => {
                   const on = picks[i] === r;
@@ -125,7 +125,7 @@ export function QuestionView({ q, value, onChange }: { q: QuizQuestion; value: A
                       }}
                       style={{ paddingHorizontal: space.md, paddingVertical: space.sm, borderRadius: radius.pill, borderWidth: 2, borderColor: on ? colors.iris500 : colors.line, backgroundColor: on ? colors.iris100 : colors.white }}
                     >
-                      <Text style={{ fontWeight: '700', color: colors.ink }}>{r}</Text>
+                      <Text style={{ fontFamily: fonts.bold, color: colors.ink }}>{r}</Text>
                     </Pressable>
                   );
                 })}

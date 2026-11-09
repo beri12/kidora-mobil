@@ -3,12 +3,13 @@ import { Text, View } from 'react-native';
 import { Link, router } from 'expo-router';
 import { Controller, useForm } from 'react-hook-form';
 import { authApi, type SelfSignupRole } from '@/api/auth';
-import { Button, Field, FormError, Screen, SectionTitle, Subtitle, Title } from '@/components/ui';
+import { Button, Field, FormError, SectionTitle, Subtitle, Title } from '@/components/ui';
+import { AuthScreen } from '@/components/AuthScreen';
 import { RolePicker } from '@/components/RolePicker';
 import { usePending } from '@/features/auth/pending';
 import { signUpSchema, type SignUpValues } from '@/features/auth/schemas';
 import { SocialButtons } from '@/features/auth/SocialButtons';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 import { zodResolver } from '@/utils/form';
 
 export default function SignUp() {
@@ -53,7 +54,7 @@ export default function SignUp() {
   );
 
   return (
-    <Screen>
+    <AuthScreen>
       <Title>Create your Kidora account</Title>
       <Subtitle>It takes a minute. A grown-up should help younger learners.</Subtitle>
       <SectionTitle>How will you use Kidora?</SectionTitle>
@@ -75,10 +76,10 @@ export default function SignUp() {
       <SocialButtons />
       <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: space.xl }}>
         <Text style={font.body}>Already have an account? </Text>
-        <Link href="/sign-in" style={{ color: colors.iris700, fontWeight: '800', fontSize: 16 }}>
+        <Link href="/sign-in" style={{ color: colors.iris700, fontFamily: fonts.extrabold, fontSize: 16 }}>
           Log in
         </Link>
       </View>
-    </Screen>
+    </AuthScreen>
   );
 }

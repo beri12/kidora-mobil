@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from '@tanstack/react-query';
 import { teacherApi } from '@/api/roles';
 import { Button, Card, ErrorState, Loading, ProgressBar, SectionTitle, Title } from '@/components/ui';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 
 const BUCKET_LABEL = { OVERDUE: '⚠️ Overdue', TODAY: '📌 Today', TOMORROW: '🗓 Tomorrow', UPCOMING: '🗓 Upcoming' } as const;
 
@@ -45,7 +45,7 @@ export default function TeacherHome() {
             {d.tasks.slice(0, 6).map((t) => (
               <Card key={`${t.type}-${t.id}`}>
                 <Text style={font.small}>{BUCKET_LABEL[t.bucket]}</Text>
-                <Text style={[font.body, { fontWeight: '800' }]}>{t.title}</Text>
+                <Text style={[font.body, { fontFamily: fonts.extrabold }]}>{t.title}</Text>
                 <Text style={font.small}>{t.className}</Text>
               </Card>
             ))}

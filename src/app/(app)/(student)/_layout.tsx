@@ -1,17 +1,16 @@
 import { Tabs } from 'expo-router/js-tabs';
 import { TabIcon } from '@/components/TabIcon';
 import { useT } from '@/i18n';
-import { colors } from '@/theme';
+import { colors, fonts } from '@/theme';
 
 export default function StudentTabs() {
   const t = useT();
   return (
     <Tabs
-      screenOptions={{
-        headerShown: false,
+      screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: colors.bgVia },
         tabBarActiveTintColor: colors.iris700,
         tabBarInactiveTintColor: colors.muted,
-        tabBarLabelStyle: { fontWeight: '800', fontSize: 12 },
+        tabBarLabelStyle: { fontFamily: fonts.extrabold, fontSize: 12 },
         tabBarStyle: { height: 64, paddingBottom: 8, borderTopColor: colors.iris100 },
       }}
     >

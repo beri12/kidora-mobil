@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { aiApi, scrubPersonalData, type TutorKind, type TutorMessage } from '@/api/ai';
 import { ApiError } from '@/api/client';
 import { Button } from '@/components/ui';
-import { colors, font, radius, space } from '@/theme';
+import { colors, font, fonts, radius, space } from '@/theme';
 import { nowMs } from '@/utils/time';
 
 const QUICK: { kind: TutorKind; label: string; prompt: string }[] = [
@@ -86,7 +86,7 @@ export function KaiChat({ lessonId, courseId, title, showHistory = false }: { le
         }
       />
       {busy && <Text style={[font.small, { paddingHorizontal: space.lg }]}>Kai is thinking…</Text>}
-      {notice ? <Text style={{ color: colors.danger, paddingHorizontal: space.lg, fontWeight: '700' }}>{notice}</Text> : null}
+      {notice ? <Text style={{ color: colors.danger, paddingHorizontal: space.lg, fontFamily: fonts.bold }}>{notice}</Text> : null}
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.sm, paddingHorizontal: space.lg, paddingTop: space.sm }}>
         {QUICK.map((q) => (
           <Pressable
@@ -96,7 +96,7 @@ export function KaiChat({ lessonId, courseId, title, showHistory = false }: { le
             onPress={() => send(q.prompt, q.kind)}
             style={{ paddingHorizontal: space.md, paddingVertical: 8, borderRadius: radius.pill, backgroundColor: colors.iris100 }}
           >
-            <Text style={{ fontWeight: '800', color: colors.iris700 }}>{q.label}</Text>
+            <Text style={{ fontFamily: fonts.extrabold, color: colors.iris700 }}>{q.label}</Text>
           </Pressable>
         ))}
       </View>

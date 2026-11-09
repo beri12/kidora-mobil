@@ -38,6 +38,10 @@ screen is native and talks to the same NestJS API the website uses.
 - **Offline:** lessons you opened are cached on the device and shown only when the network
   fails (never to bypass a refusal); content completions are queued with idempotency keys
   and replayed when you're back online. Rewards and grades are always decided by the server.
+- **Look:** the justkidora.com brand: the Kidora wordmark with its gold star
+  (`src/components/KidoraLogo.tsx`), Baloo 2 headings and Nunito text (one font family per
+  weight, see `fonts` in `src/theme`), and the website's lavender-to-sky background with
+  white rounded sign-in cards (`src/components/AuthScreen.tsx`).
 - **Feel:** chunky "3D" buttons, bouncing island nodes, animated progress bars, confetti,
   shake-on-miss, haptics and small generated sounds. All of it can be switched off in Settings.
 
@@ -98,7 +102,8 @@ Full planning docs: `docs/mobile/EXISTING_PLATFORM_AUDIT.md`, `API_INTEGRATION_M
 Before the first store release:
 1. Implement and deploy the two API changes in `docs/mobile/BACKEND_CHANGES.md` (social sign-in
    from the app, draft video uploads). As of `beri12/kidora@bd922b3` neither is in the backend.
-2. Replace `assets/icon.png`, `assets/splash-icon.png` and the Android adaptive icon with Kidora art.
+2. The icon, Android adaptive icon and splash are built from the justkidora.com wordmark
+   (Baloo 2 "K" + gold star). Swap in designer-made art if the brand team has it.
 3. Google Play: complete the **Families** policy and Data safety form. Apple: answer the
    **Kids Category** questions and age rating.
 4. Run the app against staging first, and check every role with a real account.

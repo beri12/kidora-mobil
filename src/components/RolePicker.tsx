@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 import type { SelfSignupRole } from '@/api/auth';
-import { colors, radius, space } from '@/theme';
+import { colors, fonts, radius, space } from '@/theme';
 import { feedback } from '@/utils/feedback';
 
 export const ROLE_CHOICES: { role: SelfSignupRole; emoji: string; label: string; hint: string }[] = [
@@ -35,8 +35,8 @@ export function RolePicker({ value, onChange }: { value: SelfSignupRole | null; 
             }}
           >
             <Text style={{ fontSize: 28 }}>{c.emoji}</Text>
-            <Text style={{ fontWeight: '800', color: colors.ink, fontSize: 16 }}>{c.label}</Text>
-            <Text style={{ color: colors.muted, fontSize: 12, fontWeight: '600' }}>{c.hint}</Text>
+            <Text style={{ fontFamily: fonts.extrabold, color: colors.ink, fontSize: 16 }}>{c.label}</Text>
+            <Text style={{ color: colors.muted, fontSize: 12, fontFamily: fonts.semibold }}>{c.hint}</Text>
           </Pressable>
         );
       })}

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { authApi } from '@/api/auth';
-import { Button, Field, FormError, Screen, Subtitle, Title } from '@/components/ui';
+import { Button, Field, FormError, Subtitle, Title } from '@/components/ui';
+import { AuthScreen } from '@/components/AuthScreen';
 import { emailSchema } from '@/features/auth/schemas';
 import { space } from '@/theme';
 
@@ -29,12 +30,12 @@ export default function Forgot() {
   }
 
   return (
-    <Screen>
+    <AuthScreen>
       <Title>Forgot your password?</Title>
       <Subtitle>Enter your email. We send a reset code to the phone or email on your account.</Subtitle>
       <FormError>{error}</FormError>
       <Field label="Email" autoCapitalize="none" keyboardType="email-address" autoComplete="email" value={email} onChangeText={setEmail} style={{ marginTop: space.lg }} />
       <Button title="Send reset code" busy={busy} onPress={send} />
-    </Screen>
+    </AuthScreen>
   );
 }

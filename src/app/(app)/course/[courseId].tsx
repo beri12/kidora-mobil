@@ -3,7 +3,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { learningApi } from '@/api/learning';
 import { Button, Card, ErrorState, Loading, ProgressBar, Screen, SectionTitle, Subtitle, Title } from '@/components/ui';
-import { colors, font, islandTheme, space } from '@/theme';
+import { colors, font, fonts, islandTheme, space } from '@/theme';
 
 export default function CourseScreen() {
   const { courseId } = useLocalSearchParams<{ courseId: string }>();
@@ -57,7 +57,7 @@ export default function CourseScreen() {
             >
               <Text style={{ fontSize: 22 }}>{l.completed ? '✅' : l.locked ? '🔒' : l.type === 'GAME' ? '🎮' : l.type === 'QUIZ' ? '❓' : '📖'}</Text>
               <View style={{ flex: 1 }}>
-                <Text style={[font.body, { fontWeight: '800' }]}>{l.title}</Text>
+                <Text style={[font.body, { fontFamily: fonts.extrabold }]}>{l.title}</Text>
                 <Text style={font.small}>{l.estimatedMin} min</Text>
               </View>
             </Card>

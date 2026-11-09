@@ -3,7 +3,7 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { teacherApi, type TeacherStudent } from '@/api/roles';
 import { Card, ErrorState, Loading, ProgressBar } from '@/components/ui';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 
 const HEALTH: Record<TeacherStudent['health'], { label: string; color: string }> = {
   ON_TRACK: { label: 'On track', color: colors.grass600 },
@@ -32,8 +32,8 @@ export default function ClassDetail() {
         renderItem={({ item: s }) => (
           <Card>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={[font.body, { fontWeight: '800', flex: 1 }]}>{s.name}</Text>
-              <Text style={{ color: HEALTH[s.health].color, fontWeight: '800' }}>{HEALTH[s.health].label}</Text>
+              <Text style={[font.body, { fontFamily: fonts.extrabold, flex: 1 }]}>{s.name}</Text>
+              <Text style={{ color: HEALTH[s.health].color, fontFamily: fonts.extrabold }}>{HEALTH[s.health].label}</Text>
             </View>
             <Text style={font.small}>Average {Math.round(s.averageScore)}%</Text>
             <ProgressBar value={s.progressPercent / 100} height={10} label={`${s.name} progress`} />

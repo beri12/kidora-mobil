@@ -9,7 +9,7 @@ import { Button, Card, ErrorState, Loading, PopIn, ProgressBar } from '@/compone
 import { Confetti } from '@/components/Confetti';
 import { ChoiceChallenge, CodePathChallenge, LaunchChallenge } from '@/features/games/challenges';
 import { currentChallenge, initRound, isRoundOver, roundReducer } from '@/features/games/engine';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 import { feedback } from '@/utils/feedback';
 
 function Summary({ s, slug, onReplay }: { s: SessionSummary; slug: string; onReplay: () => void }) {
@@ -144,7 +144,7 @@ export default function Play() {
         <View style={{ flex: 1 }}>
           <ProgressBar value={round.done.length / Math.max(round.challenges.length, 1)} label={`${round.done.length} of ${round.challenges.length} done`} />
         </View>
-        <Text style={{ fontWeight: '800', color: colors.sun500 }} accessibilityLabel={`Streak ${round.streak}`}>
+        <Text style={{ fontFamily: fonts.extrabold, color: colors.sun500 }} accessibilityLabel={`Streak ${round.streak}`}>
           🔥 {round.streak}
         </Text>
       </View>
@@ -175,8 +175,8 @@ export default function Play() {
 
       <View style={{ padding: space.lg, borderTopWidth: 2, borderColor: colors.iris100, backgroundColor: fb.kind === 'correct' ? colors.grass100 : fb.kind === 'wrong' ? '#FFE4E6' : fb.kind === 'revealed' ? colors.sun300 : colors.white }}>
         {fb.kind === 'correct' && <Text style={[font.h2, { color: colors.grass600 }]}>Great job! 🎉</Text>}
-        {fb.kind === 'wrong' && <Text style={[font.body, { color: colors.coral500, fontWeight: '800' }]}>{fb.reason ?? 'Not quite. Try again!'}</Text>}
-        {fb.kind === 'revealed' && <Text style={[font.body, { fontWeight: '800' }]}>Here’s how it works:</Text>}
+        {fb.kind === 'wrong' && <Text style={[font.body, { color: colors.coral500, fontFamily: fonts.extrabold }]}>{fb.reason ?? 'Not quite. Try again!'}</Text>}
+        {fb.kind === 'revealed' && <Text style={[font.body, { fontFamily: fonts.extrabold }]}>Here’s how it works:</Text>}
         {(fb.kind === 'correct' || fb.kind === 'revealed') && fb.explanation ? <Text style={[font.body, { marginTop: 4 }]}>{fb.explanation}</Text> : null}
         {fb.kind === 'correct' || fb.kind === 'revealed' ? (
           <Button title={isRoundOver(round) ? 'See results' : 'Continue'} variant="success" busy={busy} onPress={() => (isRoundOver(round) ? void finishLevel() : dispatch({ type: 'next' }))} style={{ marginTop: space.md }} />

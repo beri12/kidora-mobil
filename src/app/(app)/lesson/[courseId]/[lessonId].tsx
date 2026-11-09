@@ -11,7 +11,7 @@ import { Confetti } from '@/components/Confetti';
 import { ContentBlock } from '@/features/lessons/ContentBlock';
 import { contentCache } from '@/offline/sqlite-storage';
 import { offlineQueue } from '@/offline/sync';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 import { feedback } from '@/utils/feedback';
 import { nowMs } from '@/utils/time';
 
@@ -150,7 +150,7 @@ function LessonScreen({ courseId, lessonId }: { courseId: string; lessonId: stri
         <Text style={font.title}>{lesson.title}</Text>
         {lesson.objectives.length > 0 && (
           <Card style={{ backgroundColor: colors.grass100, borderColor: colors.grass100, marginTop: space.md }}>
-            <Text style={[font.body, { fontWeight: '800' }]}>Today you will…</Text>
+            <Text style={[font.body, { fontFamily: fonts.extrabold }]}>Today you will…</Text>
             {lesson.objectives.map((o) => (
               <Text key={o} style={font.body}>
                 • {o}
@@ -171,7 +171,7 @@ function LessonScreen({ courseId, lessonId }: { courseId: string; lessonId: stri
           ))}
           {lesson.quiz ? (
             <Card style={{ borderColor: colors.iris300 }}>
-              <Text style={[font.body, { fontWeight: '800' }]}>❓ {lesson.quiz.title}</Text>
+              <Text style={[font.body, { fontFamily: fonts.extrabold }]}>❓ {lesson.quiz.title}</Text>
               <Text style={font.small}>
                 {lesson.quiz._count.questions} questions · pass with {lesson.quiz.passingScore}%
               </Text>
@@ -179,7 +179,7 @@ function LessonScreen({ courseId, lessonId }: { courseId: string; lessonId: stri
             </Card>
           ) : null}
         </View>
-        {error ? <Text style={{ color: colors.danger, fontWeight: '700', marginBottom: space.sm }}>{error}</Text> : null}
+        {error ? <Text style={{ color: colors.danger, fontFamily: fonts.bold, marginBottom: space.sm }}>{error}</Text> : null}
         <Button
           title={alreadyDone ? 'Finish again' : 'Finish lesson'}
           variant="success"

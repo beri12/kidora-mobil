@@ -8,7 +8,7 @@ import { Button, Card, ErrorState, Loading, PopIn, ProgressBar, SectionTitle } f
 import { StatsBar } from '@/features/student/StatsBar';
 import { useClaimQuest } from '@/features/student/useQuests';
 import { useAuth } from '@/stores/auth';
-import { colors, font, islandTheme, radius, space } from '@/theme';
+import { colors, font, fonts, islandTheme, radius, space } from '@/theme';
 
 function QuestCard({ quest }: { quest: Quest }) {
   const claim = useClaimQuest();
@@ -16,7 +16,7 @@ function QuestCard({ quest }: { quest: Quest }) {
   return (
     <Card>
       <Text style={font.small}>{quest.kind === 'DAILY' ? 'Daily quest' : 'Quest'}</Text>
-      <Text style={[font.body, { fontWeight: '800', marginVertical: 4 }]}>{quest.title}</Text>
+      <Text style={[font.body, { fontFamily: fonts.extrabold, marginVertical: 4 }]}>{quest.title}</Text>
       <ProgressBar value={pct} color={colors.sun500} label={`${quest.progress} of ${quest.target}`} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: space.sm }}>
         <Text style={font.small}>
@@ -25,7 +25,7 @@ function QuestCard({ quest }: { quest: Quest }) {
         {quest.completed && !quest.claimed && (
           <Button title="Claim" variant="success" busy={claim.isPending} onPress={() => claim.mutate(quest.id)} style={{ minHeight: 40 }} />
         )}
-        {quest.claimed && <Text style={{ color: colors.grass600, fontWeight: '800' }}>Claimed ✓</Text>}
+        {quest.claimed && <Text style={{ color: colors.grass600, fontFamily: fonts.extrabold }}>Claimed ✓</Text>}
       </View>
       {claim.error ? <Text style={{ color: colors.danger, marginTop: 4 }}>{claim.error.message}</Text> : null}
     </Card>
@@ -74,7 +74,7 @@ export default function StudentHome() {
           {d.streakWeek.map((w) => (
             <View key={w.date} style={{ flex: 1, alignItems: 'center' }}>
               <Text style={{ fontSize: 18 }}>{w.done ? '🔥' : '⚪'}</Text>
-              <Text style={[font.small, w.isToday && { color: colors.iris700, fontWeight: '800' }]}>{w.day}</Text>
+              <Text style={[font.small, w.isToday && { color: colors.iris700, fontFamily: fonts.extrabold }]}>{w.day}</Text>
             </View>
           ))}
         </View>
@@ -121,7 +121,7 @@ export default function StudentHome() {
             <SectionTitle>Practice for you</SectionTitle>
             {recs.data.slice(0, 3).map((r) => (
               <Card key={`${r.game}-${r.level}`} onPress={() => router.push(`/play/${r.game}/${r.level}`)} accessibilityLabel={`Play ${r.gameName}`}>
-                <Text style={[font.body, { fontWeight: '800' }]}>
+                <Text style={[font.body, { fontFamily: fonts.extrabold }]}>
                   🎯 {r.gameName} · {r.levelName}
                 </Text>
                 <Text style={font.small}>
@@ -141,7 +141,7 @@ export default function StudentHome() {
                 return (
                   <Card key={c.id} style={{ width: 200, backgroundColor: t.bg, borderColor: t.bg }} onPress={() => router.push(`/course/${c.id}`)} accessibilityLabel={c.title}>
                     <Text style={{ fontSize: 26 }}>{t.emoji}</Text>
-                    <Text style={[font.body, { fontWeight: '800' }]} numberOfLines={2}>
+                    <Text style={[font.body, { fontFamily: fonts.extrabold }]} numberOfLines={2}>
                       {c.title}
                     </Text>
                     <Text style={font.small}>
@@ -164,12 +164,12 @@ export default function StudentHome() {
                   key={e.userId}
                   style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 6, borderRadius: radius.sm, backgroundColor: e.isMe ? colors.iris100 : 'transparent', paddingHorizontal: 6 }}
                 >
-                  <Text style={{ width: 30, fontWeight: '800', color: colors.ink }}>{e.rank}</Text>
+                  <Text style={{ width: 30, fontFamily: fonts.extrabold, color: colors.ink }}>{e.rank}</Text>
                   <Text style={[font.body, { flex: 1 }]} numberOfLines={1}>
                     {e.displayName}
                     {e.isMe ? ' (you)' : ''}
                   </Text>
-                  <Text style={{ fontWeight: '800', color: colors.iris700 }}>{e.xp} XP</Text>
+                  <Text style={{ fontFamily: fonts.extrabold, color: colors.iris700 }}>{e.xp} XP</Text>
                 </View>
               ))}
             </Card>

@@ -7,7 +7,7 @@ import { quizApi, toAnswer, type QuizResult } from '@/api/quizzes';
 import { Button, Card, ErrorState, Loading, PopIn, ProgressBar } from '@/components/ui';
 import { Confetti } from '@/components/Confetti';
 import { isAnswered, QuestionView, type AnswerValue } from '@/features/quiz/QuestionView';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 import { feedback } from '@/utils/feedback';
 
 export default function QuizScreen() {
@@ -90,7 +90,7 @@ export default function QuizScreen() {
             const r = result.review.find((x) => x.questionId === q.id);
             return (
               <Card key={q.id} style={{ borderColor: r?.correct ? colors.grass500 : r?.correct === false ? colors.coral400 : colors.line }}>
-                <Text style={[font.body, { fontWeight: '800' }]}>
+                <Text style={[font.body, { fontFamily: fonts.extrabold }]}>
                   {r?.correct ? '✅' : r?.correct === false ? '❌' : '⏳'} {i + 1}. {q.prompt}
                 </Text>
                 {r?.explanation ? <Text style={[font.small, { marginTop: 4 }]}>{r.explanation}</Text> : null}
@@ -126,7 +126,7 @@ export default function QuizScreen() {
         <View style={{ flex: 1 }}>
           <ProgressBar value={(index + 1) / z.questions.length} label={`Question ${index + 1} of ${z.questions.length}`} />
         </View>
-        {left !== null && <Text style={{ fontWeight: '800', color: left < 30 ? colors.coral500 : colors.ink }}>⏱ {Math.floor(left / 60)}:{String(left % 60).padStart(2, '0')}</Text>}
+        {left !== null && <Text style={{ fontFamily: fonts.extrabold, color: left < 30 ? colors.coral500 : colors.ink }}>⏱ {Math.floor(left / 60)}:{String(left % 60).padStart(2, '0')}</Text>}
       </View>
       <ScrollView contentContainerStyle={{ padding: space.lg }}>
         <QuestionView q={q} value={answers[q.id]} onChange={(v) => setAnswers((a) => ({ ...a, [q.id]: v }))} />

@@ -15,8 +15,9 @@ import {
 } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { colors, font, radius, space } from '@/theme';
+import { colors, font, fonts, radius, space } from '@/theme';
 import { feedback, useCalmMotion } from '@/utils/feedback';
+import { BrandBackground } from './AuthScreen';
 
 /* ------------------------------------------------------------------ screen */
 
@@ -24,6 +25,7 @@ export function Screen({ children, scroll = true, padded = true }: { children: R
   const inner = padded ? styles.padded : undefined;
   return (
     <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
+      <BrandBackground />
       {scroll ? (
         <ScrollView contentContainerStyle={[inner, { paddingBottom: space.xxl }]} keyboardShouldPersistTaps="handled">
           {children}
@@ -164,7 +166,7 @@ export function FormError({ children }: { children?: string | null }) {
   if (!children) return null;
   return (
     <View style={styles.formError} accessibilityLiveRegion="assertive">
-      <Text style={{ color: colors.danger, fontWeight: '700' }}>{children}</Text>
+      <Text style={{ color: colors.danger, fontFamily: fonts.bold }}>{children}</Text>
     </View>
   );
 }
@@ -197,7 +199,7 @@ export function Pill({ emoji, value, label, tint = colors.iris100 }: { emoji: st
   return (
     <View style={[styles.pill, { backgroundColor: tint }]} accessible accessibilityLabel={`${value} ${label}`}>
       <Text style={{ fontSize: 18 }}>{emoji}</Text>
-      <Text style={{ fontWeight: '800', color: colors.ink, fontSize: 16 }}>{value}</Text>
+      <Text style={{ fontFamily: fonts.extrabold, color: colors.ink, fontSize: 16 }}>{value}</Text>
     </View>
   );
 }
@@ -250,7 +252,7 @@ export function Empty({ emoji = '🌱', title, children }: { emoji?: string; tit
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: colors.iris50 },
+  screen: { flex: 1, backgroundColor: colors.bgVia },
   padded: { padding: space.lg },
   sectionRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: space.xl, marginBottom: space.sm },
   button: {
@@ -263,7 +265,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: space.sm,
   },
-  buttonText: { fontSize: 17, fontWeight: '800', letterSpacing: 0.3 },
+  buttonText: { fontSize: 17, fontFamily: fonts.extrabold, letterSpacing: 0.3 },
   card: {
     backgroundColor: colors.white,
     borderRadius: radius.lg,
@@ -273,7 +275,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 4,
     marginBottom: space.md,
   },
-  label: { fontWeight: '800', color: colors.ink, marginBottom: space.xs, fontSize: 15 },
+  label: { fontFamily: fonts.extrabold, color: colors.ink, marginBottom: space.xs, fontSize: 15 },
   input: {
     minHeight: 52,
     borderWidth: 2,
@@ -281,10 +283,11 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     paddingHorizontal: space.md,
     fontSize: 17,
+    fontFamily: fonts.semibold,
     color: colors.ink,
     backgroundColor: colors.white,
   },
-  error: { color: colors.danger, fontWeight: '700', marginTop: space.xs },
+  error: { color: colors.danger, fontFamily: fonts.bold, marginTop: space.xs },
   formError: { backgroundColor: '#FEF2F2', borderRadius: radius.sm, padding: space.md, marginBottom: space.md },
   track: { backgroundColor: colors.line, overflow: 'hidden', width: '100%' },
   pill: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: space.md, paddingVertical: space.sm, borderRadius: radius.pill },

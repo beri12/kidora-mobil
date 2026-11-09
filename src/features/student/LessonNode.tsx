@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated';
 import type { WorldNode } from '@/api/learning';
-import { colors } from '@/theme';
+import { colors, fonts } from '@/theme';
 import { feedback, useCalmMotion } from '@/utils/feedback';
 
 const ICON: Record<WorldNode['type'], string> = { COURSE: '📘', SECTION: '📂', LESSON: '⭐', CHALLENGE: '🎮', BOSS: '👑' };
@@ -50,7 +50,7 @@ export function LessonNode({ node, color, offset, onPress }: { node: WorldNode; 
           <Text style={{ fontSize: 30, opacity: locked ? 0.45 : 1 }}>{locked ? '🔒' : done ? '✅' : ICON[node.type]}</Text>
         </Pressable>
       </Animated.View>
-      <Text numberOfLines={2} style={{ maxWidth: 150, textAlign: 'center', marginTop: 4, fontWeight: '700', color: locked ? colors.muted : colors.ink }}>
+      <Text numberOfLines={2} style={{ maxWidth: 150, textAlign: 'center', marginTop: 4, fontFamily: fonts.bold, color: locked ? colors.muted : colors.ink }}>
         {node.title}
       </Text>
     </View>

@@ -3,7 +3,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { gamesApi } from '@/api/games';
 import { Card, ErrorState, Loading, Screen, Subtitle, Title } from '@/components/ui';
-import { colors, font, islandTheme, space } from '@/theme';
+import { colors, font, fonts, islandTheme, space } from '@/theme';
 
 export default function GameLevels() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
@@ -29,10 +29,10 @@ export default function GameLevels() {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.md }}>
               <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: l.unlocked ? t.fg : colors.line, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ color: colors.white, fontSize: 22, fontWeight: '900' }}>{l.unlocked ? l.order : '🔒'}</Text>
+                <Text style={{ color: colors.white, fontSize: 22, fontFamily: fonts.black }}>{l.unlocked ? l.order : '🔒'}</Text>
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={[font.body, { fontWeight: '800' }]}>{l.name}</Text>
+                <Text style={[font.body, { fontFamily: fonts.extrabold }]}>{l.name}</Text>
                 <Text style={font.small}>{l.learningObjective}</Text>
                 <Text style={font.small}>
                   {l.challenges} challenges · {l.xp} XP

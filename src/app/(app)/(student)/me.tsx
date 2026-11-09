@@ -8,7 +8,7 @@ import { Button, Card, Empty, ProgressBar, SectionTitle, Title } from '@/compone
 import { StatsBar } from '@/features/student/StatsBar';
 import { useClaimQuest } from '@/features/student/useQuests';
 import { useAuth } from '@/stores/auth';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 
 export default function Me() {
   const user = useAuth((s) => s.user);
@@ -37,7 +37,7 @@ export default function Me() {
         {quests.data?.length ? (
           quests.data.map((qst) => (
             <Card key={qst.id}>
-              <Text style={[font.body, { fontWeight: '800' }]}>{qst.title}</Text>
+              <Text style={[font.body, { fontFamily: fonts.extrabold }]}>{qst.title}</Text>
               <Text style={font.small}>{qst.description}</Text>
               <View style={{ marginVertical: space.sm }}>
                 <ProgressBar value={qst.target ? qst.progress / qst.target : 0} color={colors.sun500} height={10} />
@@ -49,7 +49,7 @@ export default function Me() {
                 {qst.completed && !qst.claimed ? (
                   <Button title="Claim" variant="success" busy={claim.isPending && claim.variables === qst.id} onPress={() => claim.mutate(qst.id)} style={{ minHeight: 40 }} />
                 ) : qst.claimed ? (
-                  <Text style={{ color: colors.grass600, fontWeight: '800' }}>Claimed ✓</Text>
+                  <Text style={{ color: colors.grass600, fontFamily: fonts.extrabold }}>Claimed ✓</Text>
                 ) : null}
               </View>
             </Card>
@@ -68,7 +68,7 @@ export default function Me() {
               style={{ width: '48%', backgroundColor: colors.white, borderRadius: 16, padding: space.md, borderWidth: 2, borderColor: a.unlockedAt ? colors.sun400 : colors.iris100, opacity: a.unlockedAt ? 1 : 0.7 }}
             >
               <Text style={{ fontSize: 28 }}>{a.unlockedAt ? '🏅' : '🔒'}</Text>
-              <Text style={[font.body, { fontWeight: '800' }]} numberOfLines={2}>
+              <Text style={[font.body, { fontFamily: fonts.extrabold }]} numberOfLines={2}>
                 {a.title}
               </Text>
               {!a.unlockedAt && <ProgressBar value={a.requirement ? a.progress / a.requirement : 0} height={8} color={colors.iris500} />}

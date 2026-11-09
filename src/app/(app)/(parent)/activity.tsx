@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { parentApi } from '@/api/roles';
 import { Card, Empty, ErrorState, Loading, Title } from '@/components/ui';
 import { useSelectedChild } from '@/features/parent-child';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 
 export default function Activity() {
   const selected = useSelectedChild((s) => s.childId);
@@ -28,8 +28,8 @@ export default function Activity() {
         renderItem={({ item: a }) => (
           <Card>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={[font.body, { flex: 1, fontWeight: '700' }]}>{a.title}</Text>
-              {a.xpDelta > 0 ? <Text style={{ color: colors.sun500, fontWeight: '800' }}>+{a.xpDelta} XP</Text> : null}
+              <Text style={[font.body, { flex: 1, fontFamily: fonts.bold }]}>{a.title}</Text>
+              {a.xpDelta > 0 ? <Text style={{ color: colors.sun500, fontFamily: fonts.extrabold }}>+{a.xpDelta} XP</Text> : null}
             </View>
             <Text style={font.small}>{new Date(a.createdAt).toLocaleString()}</Text>
           </Card>

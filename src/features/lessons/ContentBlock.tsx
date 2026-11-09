@@ -8,7 +8,7 @@ import { useVideoPlayer, VideoView } from 'expo-video';
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import { learningApi, type LessonContentItem } from '@/api/learning';
 import { Button, Card } from '@/components/ui';
-import { colors, font, radius, space } from '@/theme';
+import { colors, font, fonts, radius, space } from '@/theme';
 
 /** Content types this renderer knows. Anything else shows a notice instead of crashing. */
 export const SUPPORTED_TYPES = new Set([
@@ -18,7 +18,7 @@ export const SUPPORTED_TYPES = new Set([
 
 function Body({ text }: { text: string | null }) {
   if (!text) return null;
-  return <Text style={[font.body, { lineHeight: 25, fontWeight: '500' }]}>{text}</Text>;
+  return <Text style={[font.body, { lineHeight: 25, fontFamily: fonts.semibold }]}>{text}</Text>;
 }
 
 /** Reports watched time every 10 s; the server caps it at wall-clock time. */
@@ -81,7 +81,7 @@ function Downloads({ item }: { item: LessonContentItem }) {
   const all = item.url ? [{ name: item.title || 'Open', url: item.url }, ...files] : files;
   return (
     <Card>
-      {item.title ? <Text style={[font.body, { fontWeight: '800', marginBottom: space.xs }]}>📄 {item.title}</Text> : null}
+      {item.title ? <Text style={[font.body, { fontFamily: fonts.extrabold, marginBottom: space.xs }]}>📄 {item.title}</Text> : null}
       <Body text={item.body} />
       {all.map((f) => (
         <Button key={f.url} title={f.name} variant="secondary" onPress={() => WebBrowser.openBrowserAsync(f.url)} style={{ marginTop: space.sm }} />
@@ -102,7 +102,7 @@ export function ContentBlock({ item, courseId, onWatched }: { item: LessonConten
     case 'TEXT':
       return (
         <View style={{ marginBottom: space.md }}>
-          {item.title && item.type === 'TEXT' ? <Text style={[font.body, { fontWeight: '800', marginBottom: 4 }]}>{item.title}</Text> : null}
+          {item.title && item.type === 'TEXT' ? <Text style={[font.body, { fontFamily: fonts.extrabold, marginBottom: 4 }]}>{item.title}</Text> : null}
           <Body text={item.body} />
         </View>
       );
@@ -123,7 +123,7 @@ export function ContentBlock({ item, courseId, onWatched }: { item: LessonConten
     case 'CALLOUT':
       return (
         <Card style={{ backgroundColor: colors.sun300, borderColor: colors.sun400 }}>
-          {item.title ? <Text style={[font.body, { fontWeight: '800' }]}>💡 {item.title}</Text> : null}
+          {item.title ? <Text style={[font.body, { fontFamily: fonts.extrabold }]}>💡 {item.title}</Text> : null}
           <Body text={item.body} />
         </Card>
       );
@@ -132,7 +132,7 @@ export function ContentBlock({ item, courseId, onWatched }: { item: LessonConten
       return (
         <Card style={{ backgroundColor: colors.iris100 }}>
           <Text style={[font.small, { color: colors.iris700 }]}>{item.type === 'EXAMPLE' ? 'Worked example' : 'Think about it'}</Text>
-          {item.title ? <Text style={[font.body, { fontWeight: '800' }]}>{item.title}</Text> : null}
+          {item.title ? <Text style={[font.body, { fontFamily: fonts.extrabold }]}>{item.title}</Text> : null}
           <Body text={item.body} />
         </Card>
       );
@@ -145,21 +145,21 @@ export function ContentBlock({ item, courseId, onWatched }: { item: LessonConten
     case 'QUIZ':
       return item.quizId ? (
         <Card style={{ borderColor: colors.iris300 }}>
-          <Text style={[font.body, { fontWeight: '800' }]}>❓ {item.title || 'Quiz time'}</Text>
+          <Text style={[font.body, { fontFamily: fonts.extrabold }]}>❓ {item.title || 'Quiz time'}</Text>
           <Button title="Start quiz" onPress={() => router.push({ pathname: '/quiz/[quizId]', params: { quizId: item.quizId!, courseId } })} style={{ marginTop: space.sm }} />
         </Card>
       ) : null;
     case 'EXTERNAL_RESOURCE':
       return item.externalUrl ? (
         <Card>
-          <Text style={[font.body, { fontWeight: '800' }]}>🔗 {item.title || 'Open resource'}</Text>
+          <Text style={[font.body, { fontFamily: fonts.extrabold }]}>🔗 {item.title || 'Open resource'}</Text>
           <Button title="Open" variant="secondary" onPress={() => WebBrowser.openBrowserAsync(item.externalUrl!)} style={{ marginTop: space.sm }} />
         </Card>
       ) : null;
     case 'ASSIGNMENT':
       return (
         <Card>
-          <Text style={[font.body, { fontWeight: '800' }]}>📝 {item.title || 'Assignment'}</Text>
+          <Text style={[font.body, { fontFamily: fonts.extrabold }]}>📝 {item.title || 'Assignment'}</Text>
           <Text style={font.small}>Assignments are handed in on justkidora.com for now.</Text>
         </Card>
       );
@@ -167,7 +167,7 @@ export function ContentBlock({ item, courseId, onWatched }: { item: LessonConten
       // INTERACTIVE and future types: show what we can rather than failing the lesson.
       return (
         <Card style={{ borderStyle: 'dashed' }}>
-          {item.title ? <Text style={[font.body, { fontWeight: '800' }]}>{item.title}</Text> : null}
+          {item.title ? <Text style={[font.body, { fontFamily: fonts.extrabold }]}>{item.title}</Text> : null}
           {item.body ? <Body text={item.body} /> : <Text style={font.small}>This activity opens on justkidora.com.</Text>}
         </Card>
       );

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { authApi } from '@/api/auth';
-import { Button, Field, FormError, Screen, Subtitle, Title } from '@/components/ui';
+import { Button, Field, FormError, Subtitle, Title } from '@/components/ui';
+import { AuthScreen } from '@/components/AuthScreen';
 import { usePending } from '@/features/auth/pending';
 import { space } from '@/theme';
 
@@ -25,12 +26,12 @@ export default function PhoneLogin() {
   }
 
   return (
-    <Screen>
+    <AuthScreen>
       <Title>Log in with your phone</Title>
       <Subtitle>We text a 4-digit code to the number on your Kidora account.</Subtitle>
       <FormError>{error}</FormError>
       <Field label="Phone number" keyboardType="phone-pad" autoComplete="tel" placeholder="+251 91 122 3344" value={phone} onChangeText={setPhone} style={{ marginTop: space.lg }} />
       <Button title="Text me a code" busy={busy} disabled={phone.replace(/\D/g, '').length < 8} onPress={send} />
-    </Screen>
+    </AuthScreen>
   );
 }

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Pressable, Text, TextInput, View, type TextInputInstance } from 'react-native';
-import { colors, radius, space } from '@/theme';
+import { colors, fonts, radius, space } from '@/theme';
 
 /** One hidden input drawn as boxes: paste and SMS autofill both work. */
 export function CodeInput({ length, value, onChange }: { length: number; value: string; onChange: (v: string) => void }) {
@@ -22,7 +22,7 @@ export function CodeInput({ length, value, onChange }: { length: number; value: 
               justifyContent: 'center',
             }}
           >
-            <Text style={{ fontSize: 26, fontWeight: '800', color: colors.ink }}>{value[i] ?? ''}</Text>
+            <Text style={{ fontSize: 26, fontFamily: fonts.extrabold, color: colors.ink }}>{value[i] ?? ''}</Text>
           </View>
         ))}
       </View>

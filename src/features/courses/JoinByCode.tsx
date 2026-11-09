@@ -6,7 +6,7 @@ import { learningApi, type JoinByCodeResult } from '@/api/learning';
 import { Button, Card, Field, FormError } from '@/components/ui';
 import { useT } from '@/i18n';
 import { useAuth } from '@/stores/auth';
-import { colors, font, space } from '@/theme';
+import { colors, font, fonts, space } from '@/theme';
 import { isAccessCodeShape, normalizeAccessCode } from './accessCode';
 
 /** "Have a code from your teacher?" Student accounts only; the server enforces the same. */
@@ -50,7 +50,7 @@ export function JoinByCode() {
 
   return (
     <Card style={{ marginBottom: space.md }}>
-      <Text style={[font.body, { fontWeight: '800' }]} accessibilityRole="header">
+      <Text style={[font.body, { fontFamily: fonts.extrabold }]} accessibilityRole="header">
         {t('join.title')}
       </Text>
       <Text style={[font.small, { marginBottom: space.sm }]}>{t('join.hint')}</Text>

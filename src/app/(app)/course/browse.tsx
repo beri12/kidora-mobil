@@ -4,7 +4,7 @@ import { router, Stack } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { learningApi } from '@/api/learning';
 import { Card, Empty, ErrorState, Field, Loading } from '@/components/ui';
-import { colors, font, islandTheme, space } from '@/theme';
+import { colors, font, fonts, islandTheme, space } from '@/theme';
 import { useDebounced } from '@/hooks/useDebounced';
 import { useT } from '@/i18n';
 import { JoinByCode } from '@/features/courses/JoinByCode';
@@ -33,7 +33,7 @@ export default function Browse() {
             const t = islandTheme(c.subject);
             return (
               <Card onPress={() => router.push(`/course/${c.id}`)} accessibilityLabel={c.title}>
-                <Text style={[font.body, { fontWeight: '800' }]}>
+                <Text style={[font.body, { fontFamily: fonts.extrabold }]}>
                   {t.emoji} {c.title}
                 </Text>
                 <Text style={font.small}>

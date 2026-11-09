@@ -5,7 +5,7 @@ import { authApi } from '@/api/auth';
 import { Button, FormError } from '@/components/ui';
 import { useT } from '@/i18n';
 import { useAuth } from '@/stores/auth';
-import { font, space } from '@/theme';
+import { font, fonts, space } from '@/theme';
 import { appSocialProviders } from './providers';
 import { signInWithProvider, type SocialProvider } from './social';
 
@@ -46,7 +46,7 @@ export function SocialButtons() {
             variant="secondary"
             busy={busy === p}
             disabled={busy !== null && busy !== p}
-            icon={<Text style={{ fontWeight: '900', fontSize: 18, color: p === 'google' ? '#EA4335' : '#1877F2' }}>{ICON[p]}</Text>}
+            icon={<Text style={{ fontFamily: fonts.black, fontSize: 18, color: p === 'google' ? '#EA4335' : '#1877F2' }}>{ICON[p]}</Text>}
             onPress={() => go(p)}
           />
         ))}

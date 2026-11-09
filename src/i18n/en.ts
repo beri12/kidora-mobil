@@ -19,8 +19,8 @@ export const en = {
     library: 'Library',
   },
   signIn: {
-    title: 'Welcome back to Kidora',
-    subtitle: 'Log in to keep learning.',
+    title: 'Welcome back!',
+    subtitle: 'Log in to continue your learning adventure.',
     email: 'Email',
     password: 'Password',
     mfaCode: 'Authenticator code',

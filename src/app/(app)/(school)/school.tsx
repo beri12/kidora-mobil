@@ -6,7 +6,7 @@ import { schoolApi } from '@/api/roles';
 import { ApiError } from '@/api/client';
 import { Button, Card, Empty, ErrorState, Loading, ProgressBar, SectionTitle, Title } from '@/components/ui';
 import { useAuth } from '@/stores/auth';
-import { colors, font, islandTheme, space } from '@/theme';
+import { colors, font, fonts, islandTheme, space } from '@/theme';
 
 /** Aggregates only: the dashboard is computed on the server, never from a downloaded student list. */
 export default function SchoolHome() {
@@ -100,7 +100,7 @@ export default function SchoolHome() {
             <SectionTitle>Subjects</SectionTitle>
             {d.topSubjects.map((s) => (
               <Card key={s.subject}>
-                <Text style={[font.body, { fontWeight: '800' }]}>
+                <Text style={[font.body, { fontFamily: fonts.extrabold }]}>
                   {islandTheme(s.subject).emoji} {s.subject}
                 </Text>
                 <Text style={font.small}>

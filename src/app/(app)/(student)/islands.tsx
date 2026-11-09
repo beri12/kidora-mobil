@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { studentApi, type WorldIsland, type WorldNode } from '@/api/learning';
 import { Button, Empty, ErrorState, Loading, ProgressBar, Title } from '@/components/ui';
 import { LessonNode } from '@/features/student/LessonNode';
-import { colors, font, islandTheme, radius, space } from '@/theme';
+import { colors, font, fonts, islandTheme, radius, space } from '@/theme';
 
 const ISLAND_SUBJECT: Record<string, string> = {
   MATH_ISLAND: 'math',
@@ -46,7 +46,7 @@ function IslandPath({ island }: { island: WorldIsland }) {
           <View key={course.id} style={{ marginBottom: space.xl }}>
             <Pressable onPress={() => router.push(`/course/${course.id}`)} accessibilityRole="button" accessibilityLabel={`Course ${course.title}`}>
               <View style={{ backgroundColor: theme.fg, borderRadius: radius.md, padding: space.md }}>
-                <Text style={{ color: colors.white, fontWeight: '800', fontSize: 18 }}>{course.title}</Text>
+                <Text style={{ color: colors.white, fontFamily: fonts.extrabold, fontSize: 18 }}>{course.title}</Text>
               </View>
             </Pressable>
             {(course.children ?? []).map((section) => (
@@ -91,7 +91,7 @@ export default function Islands() {
                 onPress={() => setSelected(w.key)}
                 style={{ paddingHorizontal: space.md, paddingVertical: space.sm, borderRadius: radius.pill, backgroundColor: on ? t.fg : t.bg, minWidth: 110 }}
               >
-                <Text style={{ fontWeight: '800', color: on ? colors.white : t.fg }}>
+                <Text style={{ fontFamily: fonts.extrabold, color: on ? colors.white : t.fg }}>
                   {t.emoji} {w.name}
                 </Text>
                 <ProgressBar value={w.progress / 100} color={on ? colors.white : t.fg} height={6} />

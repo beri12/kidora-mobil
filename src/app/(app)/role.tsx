@@ -4,7 +4,7 @@ import { authApi, type SelfSignupRole } from '@/api/auth';
 import { Button, Field, FormError, Screen, Subtitle, Title } from '@/components/ui';
 import { RolePicker } from '@/components/RolePicker';
 import { useAuth } from '@/stores/auth';
-import { colors, space } from '@/theme';
+import { colors, fonts, space } from '@/theme';
 
 /** "How will you use Kidora?" after a social or phone sign-up. Answered once. */
 export default function ChooseRole() {
@@ -46,7 +46,7 @@ export default function ChooseRole() {
       <Title>How will you use Kidora?</Title>
       <Subtitle>Pick one. This sets up the right home for you.</Subtitle>
       <FormError>{error}</FormError>
-      {note ? <Text style={{ color: colors.grass600, fontWeight: '700', marginVertical: space.md }}>{note}</Text> : null}
+      {note ? <Text style={{ color: colors.grass600, fontFamily: fonts.bold, marginVertical: space.md }}>{note}</Text> : null}
       <RolePicker value={role} onChange={setRole} />
       {isStudent && (
         <>

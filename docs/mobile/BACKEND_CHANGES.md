@@ -1,11 +1,29 @@
-# API changes made for the mobile app
+# API changes the mobile app needs
+
+> **Status (audited 2026-11-09 against `beri12/kidora@bd922b3`, `main` and all 10 other
+> branches): neither change below exists in the backend source.** `OAuthExchangeDto` accepts
+> only `code`, the OAuth callback always redirects to `${WEB_URL}/auth/callback`, and
+> `CompleteUploadDto` has no `status`. An earlier version of this file described them as
+> made; that was wrong for the repository as it stands. Until change 1 ships, the app hides
+> the Google/Facebook buttons (see `src/features/auth/providers.ts`).
 
 Two small, backward-compatible changes in `kidora-api`. The website keeps working exactly
 as before; both changes only add an optional behaviour that the app asks for.
 **They take effect only after the API is deployed** (merge the PR, wait for the
 "Kidora Container Images" workflow, then `update.sh <sha>` on the server).
 
-## 1. Social sign-in that returns to the app (PKCE-bound)
+### Contract the app now checks for (change 1)
+
+`GET /api/auth/providers` must add, only when the change is deployed:
+
+```json
+{ "providers": ["google", "facebook"], "appClient": { "pkce": true, "providers": ["google", "facebook"] } }
+```
+
+The app shows a social button only for providers listed in both arrays. The website ignores
+the new field.
+
+## 1. Social sign-in that returns to the app (PKCE-bound) — NOT IMPLEMENTED YET
 
 **Problem:** after Google/Facebook sign-in the API always redirected to
 `${WEB_URL}/auth/callback`, so the app could never receive the result.
@@ -22,14 +40,14 @@ as before; both changes only add an optional behaviour that the app asks for.
 - No client secret is in the app. The provider callback URLs registered with Google and
   Facebook are unchanged (`https://api.justkidora.com/api/auth/{provider}/callback`).
 
-**Files:** `src/auth/strategies/oauth-state.store.ts`, `src/auth/guards/optional-oauth.guard.ts`,
+**Files to change:** `src/auth/strategies/oauth-state.store.ts`, `src/auth/guards/optional-oauth.guard.ts`,
 `src/auth/oauth.controller.ts`, `src/auth/services/oauth.service.ts`, `src/config/app.config.ts`,
 `.env.production.example` (`MOBILE_APP_SCHEME=kidora`, optional).
 
-**Tests:** `oauth.service.spec.ts` (verifier required, wrong verifier burns the code) and
+**Tests to add:** `oauth.service.spec.ts` (verifier required, wrong verifier burns the code) and
 `oauth-state.store.spec.ts` (marker set only for valid `client=app` requests, read once).
 
-## 2. Lesson videos can be uploaded as drafts
+## 2. Lesson videos can be uploaded as drafts — NOT IMPLEMENTED YET
 
 **Problem:** `POST /api/uploads/complete` created the lesson's VIDEO item with the schema
 default `PUBLISHED`, so in a live lesson children saw a new video before anyone reviewed it.
@@ -38,7 +56,7 @@ default `PUBLISHED`, so in a live lesson children saw a new video before anyone 
 teacher previews it and publishes with the existing
 `PATCH /api/authoring/content/:id/status/PUBLISHED`. Omitted: `PUBLISHED`, as before (website unchanged).
 
-**Files:** `src/lms/uploads/dto.ts`, `src/lms/uploads/uploads.service.ts`. **Tests:** `src/lms/uploads/dto.spec.ts`.
+**Files to change:** `src/lms/uploads/dto.ts`, `src/lms/uploads/uploads.service.ts`. **Tests to add:** `src/lms/uploads/dto.spec.ts`.
 
 ## Not changed, but you should know (from the code review for the app)
 
@@ -47,7 +65,7 @@ teacher previews it and publishes with the existing
 | `POST /uploads/library` buffers the whole file in memory (multer memory storage, up to 500 MB) | `lms/uploads/uploads.controller.ts` | One large upload can exhaust the 1 GB server | The app sends videos through the streaming `presign → direct → complete` flow instead; switch the library route to disk storage |
 | `POST /missions/:id/complete` lets a client complete a mission and take its reward | `economy/economy.controller.ts` | XP/coins farming | Verify progress server-side, or remove the route (the app never calls it; it uses `/student/quests/:id/claim`) |
 | `/missions` reads a `frequency` field that doesn't exist, so daily/weekly progress shows 0 | `economy/economy.service.ts` | Wrong numbers | Use the mission `kind`; the app uses `/student/quests` |
-| Lesson payload sends `checkpoints[].correct` to students | `lms/learning/learning.service.ts` | Answers visible to a curious student | Strip `correct` for students |
+| Lesson payload may send `checkpoints[].correct` to students (**unverified** in the 2026-11-09 audit: no `checkpoints` reference in `learning.service.ts`; check the video select) | `lms/learning/learning.service.ts` | Answers visible to a curious student | Strip `correct` for students |
 | `/games*` has no role guard | `games/games.controller.ts` | Teachers/parents can earn game XP | Restrict to `CHILD` if intended |
 | `PUT /avatar` doesn't check item ownership | `avatar/avatar.service.ts` | Free cosmetics | Check inventory before equipping (the app doesn't offer avatar editing yet) |
 | No district-level endpoints | — | District admins without a school get 403 | Add aggregated, privacy-thresholded district reports |

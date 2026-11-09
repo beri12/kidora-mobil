@@ -8,11 +8,13 @@ import { Button, Field, FormError, PopIn, Screen, Subtitle, Title } from '@/comp
 import { pendingFromError, usePending } from '@/features/auth/pending';
 import { signInSchema, type SignInValues } from '@/features/auth/schemas';
 import { SocialButtons } from '@/features/auth/SocialButtons';
+import { useT } from '@/i18n';
 import { useAuth } from '@/stores/auth';
 import { colors, font, space } from '@/theme';
 import { zodResolver } from '@/utils/form';
 
 export default function SignIn() {
+  const t = useT();
   const accept = useAuth((s) => s.acceptSession);
   const setPending = usePending((s) => s.set);
   const [formError, setFormError] = useState('');
@@ -33,11 +35,11 @@ export default function SignIn() {
         }
         if (e.message === 'MFA_REQUIRED') {
           setMfa('');
-          setFormError('Enter the 6-digit code from your authenticator app.');
+          setFormError(t('signIn.mfaPrompt'));
           return;
         }
       }
-      setFormError(e instanceof Error ? e.message : 'Sign-in failed.');
+      setFormError(e instanceof Error ? e.message : t('signIn.failed'));
     }
   });
   // React Native events are not DOM events: call the handler without one.
@@ -50,15 +52,15 @@ export default function SignIn() {
       <PopIn>
         <Text style={{ fontSize: 56, textAlign: 'center', marginTop: space.xl }}>🦉</Text>
       </PopIn>
-      <Title>Welcome back to Kidora</Title>
-      <Subtitle>Log in to keep learning.</Subtitle>
+      <Title>{t('signIn.title')}</Title>
+      <Subtitle>{t('signIn.subtitle')}</Subtitle>
       <View style={{ marginTop: space.xl }}>
         <FormError>{formError}</FormError>
         <Controller
           control={control}
           name="email"
           render={({ field }) => (
-            <Field label="Email" autoCapitalize="none" autoComplete="email" keyboardType="email-address" textContentType="emailAddress"
+            <Field label={t('signIn.email')} autoCapitalize="none" autoComplete="email" keyboardType="email-address" textContentType="emailAddress"
               value={field.value} onChangeText={field.onChange} onBlur={field.onBlur} error={formState.errors.email?.message} />
           )}
         />
@@ -66,24 +68,24 @@ export default function SignIn() {
           control={control}
           name="password"
           render={({ field }) => (
-            <Field label="Password" secureTextEntry autoComplete="password" textContentType="password"
+            <Field label={t('signIn.password')} secureTextEntry autoComplete="password" textContentType="password"
               value={field.value} onChangeText={field.onChange} onBlur={field.onBlur} error={formState.errors.password?.message} onSubmitEditing={submit} />
           )}
         />
         {mfa !== null && (
-          <Field label="Authenticator code" keyboardType="number-pad" maxLength={6} value={mfa} onChangeText={setMfa} autoFocus />
+          <Field label={t('signIn.mfaCode')} keyboardType="number-pad" maxLength={6} value={mfa} onChangeText={setMfa} autoFocus />
         )}
         <Link href="/forgot" style={{ color: colors.iris700, fontWeight: '800', marginBottom: space.md, textAlign: 'right' }}>
-          Forgot password?
+          {t('signIn.forgot')}
         </Link>
-        <Button title="Log in" busy={formState.isSubmitting} onPress={submit} />
-        <Button title="Log in with a phone code" variant="ghost" onPress={() => router.push('/phone')} style={{ marginTop: space.sm }} />
+        <Button title={t('signIn.submit')} busy={formState.isSubmitting} onPress={submit} />
+        <Button title={t('signIn.phone')} variant="ghost" onPress={() => router.push('/phone')} style={{ marginTop: space.sm }} />
       </View>
       <SocialButtons />
       <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: space.xl }}>
-        <Text style={font.body}>New to Kidora? </Text>
+        <Text style={font.body}>{t('signIn.newHere')}</Text>
         <Link href="/sign-up" style={{ color: colors.iris700, fontWeight: '800', fontSize: 16 }}>
-          Create an account
+          {t('signIn.createAccount')}
         </Link>
       </View>
     </Screen>

@@ -212,10 +212,19 @@ export const studentApi = {
     api.get<LeaderboardEntry[]>('/student/leaderboard', { query: { scope, period } }),
 };
 
+/** POST /courses/access-code/join (course-access.service.ts joinByCode). */
+export interface JoinByCodeResult {
+  enrolled: true;
+  alreadyEnrolled: boolean;
+  course: { id: string; slug: string; title: string; shortDescription: string | null; thumbnailUrl: string | null; accent: string | null };
+}
+
 export const learningApi = {
   myCourses: () => api.get<(DashCourse & { shortDescription: string | null })[]>('/learning/my-courses'),
   browse: (query: { search?: string; page?: number; pageSize?: number } = {}) => api.get<Paginated<BrowseCourse>>('/learning/browse', { query }),
   course: (courseId: string) => api.get<CourseDetail>(`/learning/courses/${encodeURIComponent(courseId)}`),
+  /** Students only. Wrong codes count toward a per-student hourly limit on the server. */
+  joinByCode: (code: string) => api.post<JoinByCodeResult>('/courses/access-code/join', { code }),
   enroll: (courseId: string) => api.post<unknown>(`/learning/courses/${encodeURIComponent(courseId)}/enroll`),
   lesson: (courseId: string, lessonId: string, signal?: AbortSignal) =>
     api.get<LessonPlayer>(`/learning/courses/${encodeURIComponent(courseId)}/lessons/${encodeURIComponent(lessonId)}`, { signal }),

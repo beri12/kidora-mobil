@@ -6,16 +6,20 @@ import { learningApi } from '@/api/learning';
 import { Card, Empty, ErrorState, Field, Loading } from '@/components/ui';
 import { colors, font, islandTheme, space } from '@/theme';
 import { useDebounced } from '@/hooks/useDebounced';
+import { useT } from '@/i18n';
+import { JoinByCode } from '@/features/courses/JoinByCode';
 
 export default function Browse() {
+  const t = useT();
   const [search, setSearch] = useState('');
   const term = useDebounced(search.trim(), 350);
   const q = useQuery({ queryKey: ['browse', term], queryFn: () => learningApi.browse({ search: term || undefined, pageSize: 30 }) });
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.iris50, padding: space.lg }}>
-      <Stack.Screen options={{ headerShown: true, title: 'Find a course' }} />
-      <Field label="Search" placeholder="Fractions, reading, space…" value={search} onChangeText={setSearch} returnKeyType="search" />
+      <Stack.Screen options={{ headerShown: true, title: t('browse.title') }} />
+      <JoinByCode />
+      <Field label={t('browse.search')} placeholder={t('browse.placeholder')} value={search} onChangeText={setSearch} returnKeyType="search" />
       {q.isPending ? (
         <Loading />
       ) : q.error ? (
@@ -24,7 +28,7 @@ export default function Browse() {
         <FlatList
           data={q.data.items}
           keyExtractor={(c) => c.id}
-          ListEmptyComponent={<Empty emoji="🔎" title="No courses found" />}
+          ListEmptyComponent={<Empty emoji="🔎" title={t('browse.empty')} />}
           renderItem={({ item: c }) => {
             const t = islandTheme(c.subject);
             return (

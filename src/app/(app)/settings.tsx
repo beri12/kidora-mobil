@@ -1,7 +1,9 @@
 import { Alert, Switch, Text, View } from 'react-native';
+import { Stack } from 'expo-router';
 import * as WebBrowser from 'expo-web-browser';
 import { env } from '@/config/env';
 import { Button, Card, Screen, SectionTitle } from '@/components/ui';
+import { LANGUAGES, useT, type LanguagePref } from '@/i18n';
 import { useAuth } from '@/stores/auth';
 import { useSettings } from '@/stores/settings';
 import { colors, font, space } from '@/theme';
@@ -18,42 +20,68 @@ function Row({ label, hint, value, onChange }: { label: string; hint: string; va
   );
 }
 
+const LANGUAGE_CHOICES = ['system', ...(Object.keys(LANGUAGES) as (keyof typeof LANGUAGES)[])] as const satisfies readonly LanguagePref[];
+
 export default function Settings() {
+  const t = useT();
   const s = useSettings();
   const user = useAuth((x) => x.user);
   const signOut = useAuth((x) => x.signOut);
 
   return (
     <Screen>
-      <SectionTitle>Feel</SectionTitle>
+      <Stack.Screen options={{ title: t('settings.title') }} />
+      <SectionTitle>{t('settings.feel')}</SectionTitle>
       <Card>
-        <Row label="Sounds" hint="Cheers and clicks in games" value={s.soundOn} onChange={(v) => s.set({ soundOn: v })} />
-        <Row label="Vibration" hint="A little buzz for right and wrong answers" value={s.hapticsOn} onChange={(v) => s.set({ hapticsOn: v })} />
-        <Row label="Calm motion" hint="Fewer animations and no confetti" value={s.reduceMotion} onChange={(v) => s.set({ reduceMotion: v })} />
+        <Row label={t('settings.sounds')} hint={t('settings.soundsHint')} value={s.soundOn} onChange={(v) => s.set({ soundOn: v })} />
+        <Row label={t('settings.vibration')} hint={t('settings.vibrationHint')} value={s.hapticsOn} onChange={(v) => s.set({ hapticsOn: v })} />
+        <Row label={t('settings.calm')} hint={t('settings.calmHint')} value={s.reduceMotion} onChange={(v) => s.set({ reduceMotion: v })} />
       </Card>
 
-      <SectionTitle>Daily goal</SectionTitle>
-      <View style={{ flexDirection: 'row', gap: space.sm }}>
-        {[5, 10, 15, 20].map((m) => (
-          <Button key={m} title={`${m} min`} variant={s.dailyGoalMinutes === m ? 'primary' : 'secondary'} onPress={() => s.set({ dailyGoalMinutes: m })} style={{ flex: 1, paddingHorizontal: 4 }} />
+      <SectionTitle>{t('settings.language')}</SectionTitle>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.sm }} accessibilityRole="radiogroup">
+        {LANGUAGE_CHOICES.map((code) => (
+          <Button
+            key={code}
+            // Each language names itself, so a reader can find their own language whatever is selected.
+            title={code === 'system' ? t('settings.languageSystem') : LANGUAGES[code].label}
+            variant={s.language === code ? 'primary' : 'secondary'}
+            accessibilityRole="radio"
+            accessibilityState={{ selected: s.language === code }}
+            onPress={() => s.set({ language: code })}
+            style={{ flexGrow: 1, paddingHorizontal: 8 }}
+          />
         ))}
       </View>
 
-      <SectionTitle>Account</SectionTitle>
+      <SectionTitle>{t('settings.dailyGoal')}</SectionTitle>
+      <View style={{ flexDirection: 'row', gap: space.sm }}>
+        {[5, 10, 15, 20].map((m) => (
+          <Button
+            key={m}
+            title={t('settings.minutes', { n: m })}
+            variant={s.dailyGoalMinutes === m ? 'primary' : 'secondary'}
+            onPress={() => s.set({ dailyGoalMinutes: m })}
+            style={{ flex: 1, paddingHorizontal: 4 }}
+          />
+        ))}
+      </View>
+
+      <SectionTitle>{t('settings.account')}</SectionTitle>
       <Card>
         <Text style={font.body}>{user?.name}</Text>
         <Text style={font.small}>{user?.email ?? user?.phone ?? ''}</Text>
       </Card>
-      <Button title="Privacy policy" variant="ghost" onPress={() => WebBrowser.openBrowserAsync(`${env.webUrl}/privacy`)} />
-      <Button title="Terms" variant="ghost" onPress={() => WebBrowser.openBrowserAsync(`${env.webUrl}/terms`)} />
+      <Button title={t('settings.privacy')} variant="ghost" onPress={() => WebBrowser.openBrowserAsync(`${env.webUrl}/privacy`)} />
+      <Button title={t('settings.terms')} variant="ghost" onPress={() => WebBrowser.openBrowserAsync(`${env.webUrl}/terms`)} />
       <Button
-        title="Log out"
+        title={t('settings.logout')}
         variant="danger"
         style={{ marginTop: space.lg }}
         onPress={() =>
-          Alert.alert('Log out?', 'Lessons saved on this phone for offline use will be removed.', [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Log out', style: 'destructive', onPress: () => void signOut() },
+          Alert.alert(t('settings.logoutTitle'), t('settings.logoutBody'), [
+            { text: t('settings.cancel'), style: 'cancel' },
+            { text: t('settings.logout'), style: 'destructive', onPress: () => void signOut() },
           ])
         }
       />

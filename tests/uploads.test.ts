@@ -31,3 +31,38 @@ describe('upload validation (mirrors the server limits)', () => {
     expect(validateFile({ mimeType: 'application/pdf', size: 0 }).ok).toBe(false);
   });
 });
+
+describe('enforceDraft (lesson videos never go live unreviewed without the teacher knowing)', () => {
+  const { enforceDraft } = jest.requireActual('@/api/uploads') as typeof import('@/api/uploads');
+  const base = {
+    contentItem: { id: 'ci1', title: 'Fractions intro', lessonId: 'l1' },
+    video: { id: 'v1', url: null, processingStatus: 'PENDING' as const, error: null },
+  };
+
+  it('trusts a server that honoured DRAFT and makes no extra call', async () => {
+    const setStatus = jest.fn();
+    const out = await enforceDraft({ ...base, contentItem: { ...base.contentItem, status: 'DRAFT' } }, setStatus);
+    expect(setStatus).not.toHaveBeenCalled();
+    expect(out.visibleToStudents).toBe(false);
+  });
+
+  it('moves an item the server published back to draft', async () => {
+    const setStatus = jest.fn().mockResolvedValue({ id: 'ci1', status: 'DRAFT' });
+    const out = await enforceDraft({ ...base, contentItem: { ...base.contentItem, status: 'PUBLISHED' } }, setStatus);
+    expect(setStatus).toHaveBeenCalledWith('ci1', 'DRAFT');
+    expect(out.visibleToStudents).toBe(false);
+    expect(out.contentItem.status).toBe('DRAFT');
+  });
+
+  it('treats a missing status as published', async () => {
+    const setStatus = jest.fn().mockResolvedValue({});
+    await enforceDraft(base, setStatus);
+    expect(setStatus).toHaveBeenCalledWith('ci1', 'DRAFT');
+  });
+
+  it('reports the video as live when it cannot be moved back', async () => {
+    const setStatus = jest.fn().mockRejectedValue(new Error('403'));
+    const out = await enforceDraft({ ...base, contentItem: { ...base.contentItem, status: 'PUBLISHED' } }, setStatus);
+    expect(out.visibleToStudents).toBe(true);
+  });
+});

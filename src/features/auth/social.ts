@@ -5,7 +5,9 @@ import { authApi, type Session } from '@/api/auth';
 import { ApiError } from '@/api/client';
 import { createPkcePair } from '@/utils/pkce';
 
-export type SocialProvider = 'google' | 'facebook';
+import type { SocialProvider } from './providers';
+
+export type { SocialProvider };
 
 /** "#code=…&needsRole=1" or "#error=cancelled&provider=google" → fields. */
 export function parseCallback(url: string): { code?: string; error?: string } {
@@ -25,7 +27,8 @@ export function parseCallback(url: string): { code?: string; error?: string } {
  *      (ASWebAuthenticationSession / Chrome Custom Tabs) with ?client=app.
  *   3. The API returns to kidora://auth/callback#code=… (one-time, 60 s).
  *   4. Trade code + verifier for tokens at POST /auth/oauth/exchange.
- * Requires the API change that adds ?client=app (see docs/mobile/BACKEND_CHANGES.md).
+ * Requires the API change that adds ?client=app (see docs/mobile/BACKEND_CHANGES.md);
+ * the buttons only appear once the API advertises it (appSocialProviders).
  */
 export async function signInWithProvider(provider: SocialProvider): Promise<Session | null> {
   const { verifier, challenge } = await createPkcePair();

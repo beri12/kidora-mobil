@@ -17,8 +17,12 @@ screen is native and talks to the same NestJS API the website uses.
 ## What is in it
 
 - **Sign-in:** email + password, phone OTP, email/SMS verification, MFA code, forgot/reset
-  password, Google and Facebook sign-in (system browser + PKCE; needs the API change in
-  `docs/BACKEND_CHANGES.md`), and the "How will you use Kidora?" role step.
+  password, Google and Facebook sign-in (system browser + PKCE; the buttons stay hidden until
+  the API advertises the change in `docs/mobile/BACKEND_CHANGES.md`, which is **not** in the
+  backend repository yet), course join by teacher code, and the "How will you use Kidora?" role step.
+- **Languages:** English and Amharic (አማርኛ), following the phone or a choice in Settings.
+  The navigation, sign-in, settings, course search and join screens are translated so far;
+  see `src/i18n/` and `docs/mobile/IMPLEMENTATION_PLAN.md`.
 - **Students:** home (streak week, XP/level, continue learning, daily quest, recommended
   practice, top learners), learning islands from `/student/world`, course pages, course
   search, the lesson player (text, images, video with progress reporting, audio, documents,
@@ -40,7 +44,6 @@ screen is native and talks to the same NestJS API the website uses.
 ## Run it
 
 ```bash
-cd apps/mobile
 npm install
 cp .env.example .env          # public values only (see below)
 npx expo start                # then press "a" for Android or "i" for iOS
@@ -76,7 +79,7 @@ keys or the internal AI-service URL. The app has no use for them: the API holds 
 ```bash
 npm run typecheck     # tsc --noEmit (strict, noUncheckedIndexedAccess)
 npm run lint          # eslint-config-expo, including the React Compiler rules
-npm test              # jest-expo: 54 tests
+npm test              # jest-expo: 84 tests
 npx expo export --platform android --platform ios   # proves both bundles build
 ```
 
@@ -89,9 +92,12 @@ npx eas-cli@latest build --profile production --platform all       # store build
 npx eas-cli@latest submit --profile production --platform android
 ```
 
+Full planning docs: `docs/mobile/EXISTING_PLATFORM_AUDIT.md`, `API_INTEGRATION_MAP.md`,
+`MOBILE_ARCHITECTURE.md` and the running checklist in `IMPLEMENTATION_PLAN.md`.
+
 Before the first store release:
-1. Deploy the two API changes in `docs/BACKEND_CHANGES.md` (social sign-in from the app,
-   draft video uploads).
+1. Implement and deploy the two API changes in `docs/mobile/BACKEND_CHANGES.md` (social sign-in
+   from the app, draft video uploads). As of `beri12/kidora@bd922b3` neither is in the backend.
 2. Replace `assets/icon.png`, `assets/splash-icon.png` and the Android adaptive icon with Kidora art.
 3. Google Play: complete the **Families** policy and Data safety form. Apple: answer the
    **Kids Category** questions and age rating.
@@ -115,7 +121,8 @@ src/
   components/          design system (ui.tsx, Confetti, CodeInput…)
   offline/             SQLite cache, sync queue, NetInfo-driven sync
   stores/              auth session, settings
+  i18n/                English + Amharic dictionaries, useT()
   theme/ utils/ hooks/ config/
 tests/                 Jest tests
-docs/                  capability report, backend changes, API contracts
+docs/mobile/           audit, API map, architecture, plan/checklist, backend changes
 ```

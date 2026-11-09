@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import Storage from 'expo-sqlite/kv-store';
+import type { LanguagePref } from '@/i18n';
 
 /**
  * Per-device preferences. Nothing sensitive: tokens live in SecureStore and
@@ -12,6 +13,8 @@ interface SettingsState {
   /** On top of the OS setting: a child or parent may want calmer screens. */
   reduceMotion: boolean;
   dailyGoalMinutes: number;
+  /** 'system' follows the phone's language list. */
+  language: LanguagePref;
   set: (patch: Partial<Omit<SettingsState, 'set'>>) => void;
 }
 
@@ -22,6 +25,7 @@ export const useSettings = create<SettingsState>()(
       hapticsOn: true,
       reduceMotion: false,
       dailyGoalMinutes: 10,
+      language: 'system',
       set: (patch) => set(patch),
     }),
     { name: 'kidora.settings.v1', storage: createJSONStorage(() => Storage) },

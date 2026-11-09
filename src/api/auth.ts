@@ -70,6 +70,12 @@ export interface RegisterInput {
 export interface Providers {
   providers: string[];
   firebase?: { enabled: boolean; providers: string[] };
+  /**
+   * Advertised only by an API that can return a social sign-in to the app
+   * (`?client=app`, PKCE-bound exchange code). Not present on production as of
+   * kidora@bd922b3: see docs/mobile/BACKEND_CHANGES.md.
+   */
+  appClient?: { pkce: boolean; providers: string[] };
 }
 
 const pub = { auth: false } as const;

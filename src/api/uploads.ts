@@ -113,8 +113,34 @@ export interface PresignResult {
 }
 
 export interface CompletedVideo {
-  contentItem: { id: string; title: string; lessonId: string };
+  contentItem: { id: string; title: string; lessonId: string; status?: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED' };
   video: { id: string; url: string | null; processingStatus: 'PENDING' | 'PROCESSING' | 'READY' | 'FAILED'; error: string | null };
+  /**
+   * Set by the app, not the server: false only when the item is confirmed as a
+   * draft. If the API ignored `status: 'DRAFT'` (production as of kidora@bd922b3,
+   * whose ValidationPipe strips unknown fields) and moving it back to draft
+   * failed, this is true and the teacher must be told the video is live.
+   */
+  visibleToStudents: boolean;
+}
+
+/**
+ * The API creates lesson videos as PUBLISHED unless it supports
+ * `status: 'DRAFT'` (docs/mobile/BACKEND_CHANGES.md, change 2, not deployed).
+ * Never claim a draft we can't confirm: if the item came back published, put
+ * it back to DRAFT straight away with the existing authoring route.
+ */
+export async function enforceDraft(
+  done: Omit<CompletedVideo, 'visibleToStudents'>,
+  setStatus: (contentItemId: string, status: 'DRAFT') => Promise<unknown> = setContentStatus,
+): Promise<CompletedVideo> {
+  if (done.contentItem.status === 'DRAFT') return { ...done, visibleToStudents: false };
+  try {
+    await setStatus(done.contentItem.id, 'DRAFT');
+    return { ...done, contentItem: { ...done.contentItem, status: 'DRAFT' }, visibleToStudents: false };
+  } catch {
+    return { ...done, visibleToStudents: true };
+  }
 }
 
 /**
@@ -165,7 +191,12 @@ export function uploadLessonVideo(
     });
 
     // DRAFT: students never see it until the teacher reviews and publishes it.
-    const done = await api.post<CompletedVideo>('/uploads/complete', { sessionId: session.sessionId, title: target.title, status: 'DRAFT' });
+    const completed = await api.post<Omit<CompletedVideo, 'visibleToStudents'>>('/uploads/complete', {
+      sessionId: session.sessionId,
+      title: target.title,
+      status: 'DRAFT',
+    });
+    const done = await enforceDraft(completed);
     onProgress(1);
     return done;
   })();

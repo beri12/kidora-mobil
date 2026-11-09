@@ -183,7 +183,10 @@ export default function Upload() {
             <Card>
               <Text style={[font.body, { fontWeight: '800' }]}>🎬 {done.video.contentItem.title}</Text>
               <Text style={font.small}>
-                Saved as a draft: students can’t see it yet. Processing: {videoState?.toLowerCase()}
+                {done.video.visibleToStudents
+                  ? '⚠️ This video is already visible to students in the lesson: the server published it and it could not be moved back to draft. Unpublish it on justkidora.com if it is not ready.'
+                  : 'Saved as a draft: students can’t see it yet.'}{' '}
+                Processing: {videoState?.toLowerCase()}
                 {status.data?.error ? ` (${status.data.error})` : ''}
               </Text>
               {videoState === 'FAILED' && (

@@ -3,20 +3,22 @@ import { Text, View } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
 import { authApi } from '@/api/auth';
 import { Button, FormError } from '@/components/ui';
+import { useT } from '@/i18n';
 import { useAuth } from '@/stores/auth';
 import { font, space } from '@/theme';
+import { appSocialProviders } from './providers';
 import { signInWithProvider, type SocialProvider } from './social';
 
-const LABEL: Record<SocialProvider, string> = { google: 'Continue with Google', facebook: 'Continue with Facebook' };
 const ICON: Record<SocialProvider, string> = { google: 'G', facebook: 'f' };
 
-/** Only providers the server actually has configured are shown. */
+/** Only providers the server has configured AND can return to the app are shown. */
 export function SocialButtons() {
+  const t = useT();
   const accept = useAuth((s) => s.acceptSession);
   const [busy, setBusy] = useState<SocialProvider | null>(null);
   const [error, setError] = useState('');
   const { data } = useQuery({ queryKey: ['auth-providers'], queryFn: authApi.providers, staleTime: 5 * 60_000 });
-  const shown = (['google', 'facebook'] as const).filter((p) => data?.providers.includes(p));
+  const shown = appSocialProviders(data);
   if (!shown.length) return null;
 
   async function go(p: SocialProvider) {
@@ -26,7 +28,7 @@ export function SocialButtons() {
       const session = await signInWithProvider(p);
       if (session) await accept(session);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Sign-in failed. Please try again.');
+      setError(e instanceof Error ? e.message : t('social.failed'));
     } finally {
       setBusy(null);
     }
@@ -34,13 +36,13 @@ export function SocialButtons() {
 
   return (
     <View style={{ marginTop: space.lg }}>
-      <Text style={[font.small, { textAlign: 'center', marginBottom: space.sm }]}>or continue with</Text>
+      <Text style={[font.small, { textAlign: 'center', marginBottom: space.sm }]}>{t('social.or')}</Text>
       <FormError>{error}</FormError>
       <View style={{ gap: space.sm }}>
         {shown.map((p) => (
           <Button
             key={p}
-            title={LABEL[p]}
+            title={t(p === 'google' ? 'social.google' : 'social.facebook')}
             variant="secondary"
             busy={busy === p}
             disabled={busy !== null && busy !== p}

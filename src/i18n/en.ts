@@ -47,6 +47,8 @@ export const en = {
     vibrationHint: 'A little buzz for right and wrong answers',
     calm: 'Calm motion',
     calmHint: 'Fewer animations and no confetti',
+    games3d: '3D game worlds',
+    games3dHint: 'Turn off for the classic 2D games on older phones',
     dailyGoal: 'Daily goal',
     minutes: '{n} min',
     language: 'Language',

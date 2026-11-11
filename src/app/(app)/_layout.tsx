@@ -29,6 +29,7 @@ export default function AppLayout() {
         <Stack.Screen name="game/[slug]" options={{ headerShown: true, title: '' }} />
         <Stack.Screen name="play/[slug]/[level]" options={{ gestureEnabled: false }} />
         <Stack.Screen name="kai" options={{ presentation: 'modal' }} />
+        <Stack.Screen name="create" />
         <Stack.Screen name="settings" options={{ headerShown: true, title: 'Settings' }} />
       </Stack.Protected>
     </Stack>

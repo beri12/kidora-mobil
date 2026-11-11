@@ -15,6 +15,8 @@ interface SettingsState {
   dailyGoalMinutes: number;
   /** 'system' follows the phone's language list. */
   language: LanguagePref;
+  /** 3D game worlds. Off = the classic 2D boards (lighter on older phones). */
+  games3d: boolean;
   set: (patch: Partial<Omit<SettingsState, 'set'>>) => void;
 }
 
@@ -26,6 +28,7 @@ export const useSettings = create<SettingsState>()(
       reduceMotion: false,
       dailyGoalMinutes: 10,
       language: 'system',
+      games3d: true,
       set: (patch) => set(patch),
     }),
     { name: 'kidora.settings.v1', storage: createJSONStorage(() => Storage) },

@@ -145,7 +145,7 @@ export function CodePathChallenge({ challenge, onSubmit, locked }: { challenge: 
 
 /* --------------------------------------------------------- physics launch */
 
-function Stepper({ label, value, min, max, step, onChange, unit }: { label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void; unit: string }) {
+export function Stepper({ label, value, min, max, step, onChange, unit }: { label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void; unit: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.sm, marginTop: space.sm }} accessibilityLabel={`${label} ${value}${unit}`}>
       <Text style={[font.body, { width: 70 }]}>{label}</Text>

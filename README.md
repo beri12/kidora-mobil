@@ -28,7 +28,9 @@ screen is native and talks to the same NestJS API the website uses.
   search, the lesson player (text, images, video with progress reporting, audio, documents,
   callouts, examples, code, quizzes, external links; unknown types degrade gracefully), the
   quiz engine (all six question types, timer, server grading and review), the game engine
-  (every seeded game: multiple choice, the Code City robot, the Launch Lab), quests, achievements,
+  (every seeded game: multiple choice, the Code City robot, the Launch Lab) as **3D worlds**
+  (Three.js on expo-gl, with a 2D fallback) plus a 3D **Creative World** builder
+  (`docs/games/KIDORA_3D_GAMES.md`), quests, achievements,
   badges, and **Kai** (tab + in-lesson sheet).
 - **Parents:** linked children only, KPIs, weekly activity, subjects, insights, assignments, activity feed.
 - **Teachers:** dashboard (KPIs, to-do, skill gaps), classes and rosters with student health,
@@ -83,7 +85,7 @@ keys or the internal AI-service URL. The app has no use for them: the API holds 
 ```bash
 npm run typecheck     # tsc --noEmit (strict, noUncheckedIndexedAccess)
 npm run lint          # eslint-config-expo, including the React Compiler rules
-npm test              # jest-expo: 84 tests
+npm test              # jest-expo: 115 tests
 npx expo export --platform android --platform ios   # proves both bundles build
 ```
 

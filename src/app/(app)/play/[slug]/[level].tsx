@@ -8,6 +8,7 @@ import { ApiError } from '@/api/client';
 import { Button, Card, ErrorState, Loading, PopIn, ProgressBar } from '@/components/ui';
 import { Confetti } from '@/components/Confetti';
 import { ChoiceChallenge, CodePathChallenge, LaunchChallenge } from '@/features/games/challenges';
+import { Choice3D, Launch3D, RobotRoute3D, use3D } from '@/features/game3d/Challenges3D';
 import { currentChallenge, initRound, isRoundOver, roundReducer } from '@/features/games/engine';
 import { colors, font, fonts, space } from '@/theme';
 import { feedback } from '@/utils/feedback';
@@ -54,6 +55,7 @@ export default function Play() {
   const [note, setNote] = useState('');
   const [attempt, setAttempt] = useState(0);
   const starting = useRef<string | null>(null);
+  const threeD = use3D();
 
   // One session per (level, attempt); guards against double mounts starting two.
   useEffect(() => {
@@ -155,10 +157,19 @@ export default function Play() {
         {ch.speaker ? <Text style={[font.small, { color: colors.iris700 }]}>{ch.speaker} says:</Text> : null}
         <Text style={[font.h2, { marginVertical: space.md }]}>{ch.prompt}</Text>
 
-        {/* keyed by challenge: each one starts with a fresh board */}
-        {ch.kind === 'MULTIPLE_CHOICE' && <ChoiceChallenge key={ch.id} challenge={ch} onSubmit={submit} locked={locked} />}
-        {ch.kind === 'CODE_PATH' && <CodePathChallenge key={ch.id} challenge={ch} onSubmit={submit} locked={locked} />}
-        {ch.kind === 'PHYSICS_LAUNCH' && <LaunchChallenge key={ch.id} challenge={ch} onSubmit={submit} locked={locked} />}
+        {/* keyed by challenge: each one starts with a fresh board. 3D worlds when the
+            device supports them (and Settings allow), the classic 2D boards otherwise.
+            Either way the server checks every answer. */}
+        {ch.kind === 'MULTIPLE_CHOICE' &&
+          (threeD ? (
+            <Choice3D key={ch.id} world={session.game.world} challenge={ch} onSubmit={submit} locked={locked} />
+          ) : (
+            <ChoiceChallenge key={ch.id} challenge={ch} onSubmit={submit} locked={locked} />
+          ))}
+        {ch.kind === 'CODE_PATH' &&
+          (threeD ? <RobotRoute3D key={ch.id} challenge={ch} onSubmit={submit} locked={locked} /> : <CodePathChallenge key={ch.id} challenge={ch} onSubmit={submit} locked={locked} />)}
+        {ch.kind === 'PHYSICS_LAUNCH' &&
+          (threeD ? <Launch3D key={ch.id} challenge={ch} onSubmit={submit} locked={locked} /> : <LaunchChallenge key={ch.id} challenge={ch} onSubmit={submit} locked={locked} />)}
         {!['MULTIPLE_CHOICE', 'CODE_PATH', 'PHYSICS_LAUNCH'].includes(ch.kind) && (
           <Card>
             <Text style={font.body}>This challenge type needs a newer version of the app.</Text>

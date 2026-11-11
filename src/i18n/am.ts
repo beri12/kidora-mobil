@@ -47,6 +47,8 @@ export const am: Dictionary = {
     vibrationHint: 'ለትክክለኛ እና ለተሳሳተ መልስ ትንሽ ንዝረት',
     calm: 'ረጋ ያለ እንቅስቃሴ',
     calmHint: 'ያነሱ አኒሜሽኖች፣ ኮንፈቲ የለም',
+    games3d: 'የ3D ጨዋታ ዓለሞች',
+    games3dHint: 'ለቆዩ ስልኮች ያጥፉት፤ የ2D ጨዋታዎች ይታያሉ',
     dailyGoal: 'የዕለት ግብ',
     minutes: '{n} ደቂቃ',
     language: 'ቋንቋ',

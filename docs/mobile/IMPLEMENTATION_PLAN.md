@@ -62,13 +62,19 @@ work in `beri12/kidora` · **U** = needs a decision or credential from the owner
 ## Phase 3 — Games
 
 - [x] Game library, recommendations, server-scored native engine for all seeded games
+- [x] 3D worlds (Three.js on expo-gl) for every server challenge kind: Coding City robot route,
+      Science Planet launch lab, themed 3D choice scenes (Math, Reading, History, Coding, Science);
+      Creative World builder (on-device, no XP); 2D fallback + Settings switch — 2026-11-11.
+      See `docs/games/KIDORA_3D_GAMES.md`
+- [ ] 3D on real devices (dev build; low-end Android + iPhone)
+- [ ] **B** Loops / if-blocked blocks in the server grid checker, then a Repeat block in the app
 - [ ] **B** Game manifest columns (engine, delivery, version, supported devices, offline,
       age, approval) — additive migration
 - [ ] **B** External game session: short-lived token scoped to one session, event endpoint
       validating every event, no PII to partners
 - [ ] `packages/game-sdk` + `docs/game-partners/GAME_SDK.md`
 - [ ] Launcher choosing WEB / UNITY_WEBGL / DEEP_LINK / NATIVE_GAME by device capability
-- [ ] First Three.js experience in a locked-down WebView (no navigation outside its origin)
+- [~] First Three.js experience — done natively with expo-gl instead of a WebView (above)
 - [ ] **B** S2: role guard on games
 
 ## Phase 4 — Offline

@@ -21,6 +21,15 @@ export default function Games() {
           <View style={{ marginBottom: space.md }}>
             <Title>Learning games</Title>
             <Subtitle>Every game is real practice. Answers are checked by Kidora, and XP comes from learning.</Subtitle>
+            <Card onPress={() => router.push('/create')} accessibilityLabel="Creative World. Build in 3D and try build challenges. Practice, no XP." style={{ marginTop: space.md, backgroundColor: '#FFE4F1', borderColor: '#FFE4F1' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.md }}>
+                <Text style={{ fontSize: 40 }}>🎨</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={[font.h2, { color: '#BE185D' }]}>Creative World</Text>
+                  <Text style={font.small}>Build in 3D: towers, stairs, patterns and mirror shapes. Practice, no XP.</Text>
+                </View>
+              </View>
+            </Card>
           </View>
         }
         ListEmptyComponent={<Empty emoji="🎮" title="No games yet" />}

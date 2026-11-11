@@ -50,3 +50,9 @@ jest.mock('react-native-reanimated', () => {
     Easing: { out: () => undefined, quad: undefined },
   };
 });
+
+// No WebGL under Jest: the 3D stage renders an empty view and never creates a context.
+jest.mock('expo-gl', () => {
+  const { View } = jest.requireActual('react-native');
+  return { GLView: View };
+});

@@ -36,6 +36,7 @@ export default function Settings() {
         <Row label={t('settings.sounds')} hint={t('settings.soundsHint')} value={s.soundOn} onChange={(v) => s.set({ soundOn: v })} />
         <Row label={t('settings.vibration')} hint={t('settings.vibrationHint')} value={s.hapticsOn} onChange={(v) => s.set({ hapticsOn: v })} />
         <Row label={t('settings.calm')} hint={t('settings.calmHint')} value={s.reduceMotion} onChange={(v) => s.set({ reduceMotion: v })} />
+        <Row label={t('settings.games3d')} hint={t('settings.games3dHint')} value={s.games3d} onChange={(v) => s.set({ games3d: v })} />
       </Card>
 
       <SectionTitle>{t('settings.language')}</SectionTitle>
